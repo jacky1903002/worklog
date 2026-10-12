@@ -57,7 +57,7 @@
                 </div>
             </div>
 
-            <!-- 視圖切換按鈕：工作日誌表單 / 甘特圖視圖 / 工作日誌分析 -->
+            <!-- 視圖切換按鈕 -->
             <div class="flex items-center space-x-3">
                 <div class="flex space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200 shadow-inner">
                     <button onclick="switchView('table')" id="view-table-btn" class="px-3.5 py-2 rounded-lg font-extrabold text-xs bg-blue-700 text-white shadow-md transition">
@@ -103,15 +103,13 @@
             </div>
         </div>
 
-        <!-- 增強功能工具列：即時搜尋、快速過濾、新增列位與匯入匯出 -->
+        <!-- 增強功能工具列 -->
         <div id="table-toolbar" class="bg-white border-b border-slate-200 px-6 py-3 flex flex-wrap justify-between items-center gap-3 shadow-sm w-full">
             <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
-                <!-- 關鍵字搜尋框 -->
                 <div class="relative flex items-center">
                     <i class="fa-solid fa-search absolute left-3.5 text-slate-400"></i>
                     <input type="text" id="global-search" oninput="handleSearchInput(this.value)" placeholder="搜尋任務內容、專案、負責人..." class="pl-10 pr-4 py-2 border-2 border-slate-200 rounded-xl text-xs font-bold focus:ring-2 focus:ring-blue-600 focus:outline-none w-64 shadow-inner">
                 </div>
-                <!-- 快速篩選按鈕列 -->
                 <div class="flex items-center space-x-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200">
                     <button onclick="setFilter('all')" id="filter-all-btn" class="px-3 py-1.5 rounded-lg text-xs font-extrabold bg-blue-700 text-white transition shadow-sm">全部</button>
                     <button onclick="setFilter('unclosed')" id="filter-unclosed-btn" class="px-3 py-1.5 rounded-lg text-xs font-extrabold text-slate-700 hover:bg-slate-200 transition">未結案</button>
@@ -137,7 +135,7 @@
         <!-- 主要內容區 -->
         <main class="flex-1 py-6 px-6 w-full">
             
-            <!-- 區塊一：工作日誌表格 (支援優先權排序與網址偵測) -->
+            <!-- 區塊一：工作日誌表格 -->
             <div id="section-table" class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden w-full">
                 <div class="px-6 py-4 bg-slate-100 border-b border-slate-200 flex flex-wrap justify-between items-center gap-2">
                     <h3 id="current-sheet-title" ondblclick="renameCurrentSheetHeader()" class="font-extrabold text-slate-900 text-base cursor-pointer hover:text-blue-700 transition select-none flex items-center" title="💡 雙擊即可自由編輯工作表標題名稱">
@@ -192,12 +190,10 @@
                         <i class="fa-solid fa-rotate mr-1.5"></i>重新整理圖表
                     </button>
                 </div>
-                <div id="gantt-container" class="space-y-4 py-2">
-                    <!-- 動態渲染甘特圖長條 -->
-                </div>
+                <div id="gantt-container" class="space-y-4 py-2"></div>
             </div>
 
-            <!-- 區塊三：工作日誌分析與圖表 -->
+            <!-- 區塊三：數據分析 -->
             <div id="section-analysis" class="hidden space-y-6 w-full">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
                     <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200 flex items-center justify-between">
@@ -205,36 +201,28 @@
                             <p class="text-xs text-slate-500 font-extrabold uppercase">總工作項目</p>
                             <h3 id="stat-total" class="text-3xl font-extrabold text-slate-900 mt-1">0</h3>
                         </div>
-                        <div class="bg-blue-100 text-blue-700 p-3.5 rounded-2xl text-xl shadow-inner">
-                            <i class="fa-solid fa-list-check"></i>
-                        </div>
+                        <div class="bg-blue-100 text-blue-700 p-3.5 rounded-2xl text-xl shadow-inner"><i class="fa-solid fa-list-check"></i></div>
                     </div>
                     <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200 flex items-center justify-between">
                         <div>
                             <p class="text-xs text-slate-500 font-extrabold uppercase">已結案 (Y)</p>
                             <h3 id="stat-completed" class="text-3xl font-extrabold text-emerald-600 mt-1">0</h3>
                         </div>
-                        <div class="bg-emerald-100 text-emerald-700 p-3.5 rounded-2xl text-xl shadow-inner">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
+                        <div class="bg-emerald-100 text-emerald-700 p-3.5 rounded-2xl text-xl shadow-inner"><i class="fa-solid fa-circle-check"></i></div>
                     </div>
                     <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200 flex items-center justify-between">
                         <div>
                             <p class="text-xs text-slate-500 font-extrabold uppercase">進行中 / 待處理</p>
                             <h3 id="stat-ongoing" class="text-3xl font-extrabold text-amber-600 mt-1">0</h3>
                         </div>
-                        <div class="bg-amber-100 text-amber-700 p-3.5 rounded-2xl text-xl shadow-inner">
-                            <i class="fa-solid fa-spinner"></i>
-                        </div>
+                        <div class="bg-amber-100 text-amber-700 p-3.5 rounded-2xl text-xl shadow-inner"><i class="fa-solid fa-spinner"></i></div>
                     </div>
                     <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200 flex items-center justify-between">
                         <div>
                             <p class="text-xs text-slate-500 font-extrabold uppercase">結案達成率</p>
                             <h3 id="stat-rate" class="text-3xl font-extrabold text-indigo-600 mt-1">0%</h3>
                         </div>
-                        <div class="bg-indigo-100 text-indigo-700 p-3.5 rounded-2xl text-xl shadow-inner">
-                            <i class="fa-solid fa-chart-line"></i>
-                        </div>
+                        <div class="bg-indigo-100 text-indigo-700 p-3.5 rounded-2xl text-xl shadow-inner"><i class="fa-solid fa-chart-line"></i></div>
                     </div>
                 </div>
 
@@ -246,9 +234,7 @@
                                 <i class="fa-solid fa-download mr-1.5"></i>匯出 PNG
                             </button>
                         </div>
-                        <div class="relative h-72 flex justify-center items-center">
-                            <canvas id="statusChart"></canvas>
-                        </div>
+                        <div class="relative h-72 flex justify-center items-center"><canvas id="statusChart"></canvas></div>
                     </div>
 
                     <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200 flex flex-col justify-between">
@@ -258,9 +244,7 @@
                                 <i class="fa-solid fa-download mr-1.5"></i>匯出 PNG
                             </button>
                         </div>
-                        <div class="relative h-72 flex justify-center items-center">
-                            <canvas id="projectChart"></canvas>
-                        </div>
+                        <div class="relative h-72 flex justify-center items-center"><canvas id="projectChart"></canvas></div>
                     </div>
                 </div>
             </div>
@@ -292,7 +276,7 @@
         let currentSheetName = "";
         let currentUserEmail = "";
         let currentSearchQuery = "";
-        let currentFilterMode = "all"; // all, unclosed, urgent, my
+        let currentFilterMode = "all";
         let statusChartInstance = null;
         let projectChartInstance = null;
 
@@ -303,33 +287,11 @@
                     closed: "Y",
                     priority: "⚡ 普通",
                     category: "設備改善",
-                    task: "進行無塵室清洗自動線設備點檢 https://example.com/check",
+                    task: "進行無塵室清洗自動線設備點檢",
                     assignee: "劉金勳",
                     startDate: "2026-10-10",
                     dueDate: "2026-10-12",
                     remarks: "已確認運作正常"
-                },
-                {
-                    status: "🟡 進行中",
-                    closed: "N",
-                    priority: "🔥 緊急重要",
-                    category: "品管與分析",
-                    task: "AMAT 離子層析分析（IC 測試）申請與送樣",
-                    assignee: "劉金勳",
-                    startDate: "2026-10-12",
-                    dueDate: "2026-10-15",
-                    remarks: "樣品尺寸計算 41.3 cm²，待寄出"
-                },
-                {
-                    status: "🔴 待處理",
-                    closed: "N",
-                    priority: "☕ 長期追蹤",
-                    category: "廠務工程",
-                    task: "評估新竹廠區陽極自動線升級方案",
-                    assignee: "劉金勳",
-                    startDate: "2026-10-14",
-                    dueDate: "2026-10-20",
-                    remarks: "待廠商提供報價與規格書"
                 }
             ]
         };
@@ -391,6 +353,16 @@
                 const data = snapshot.val();
                 if (data) {
                     dbWorksheets = data;
+                    // 安全檢查：確保每筆資料都有必要的欄位，避免讀取舊資料時出錯
+                    Object.keys(dbWorksheets).forEach(sheet => {
+                        if (Array.isArray(dbWorksheets[sheet])) {
+                            dbWorksheets[sheet].forEach(row => {
+                                if (!row.priority) row.priority = "⚡ 普通";
+                                if (!row.status) row.status = "🟡 進行中";
+                                if (!row.closed) row.closed = "N";
+                            });
+                        }
+                    });
                 } else {
                     dbWorksheets = JSON.parse(JSON.stringify(defaultWorksheets));
                     saveToFirebase(true);
@@ -415,15 +387,17 @@
             Object.keys(dbWorksheets).forEach(key => {
                 const cleanKey = sanitizeSheetName(key);
                 if (cleanKey && cleanKey.trim() !== "") {
-                    cleanWorksheets[cleanKey] = (dbWorksheets[key] || []).map(row => {
-                        const cleanRow = {};
-                        Object.keys(row).forEach(rk => {
-                            if (rk && rk.trim() !== "") {
-                                cleanRow[rk] = row[rk] !== undefined ? row[rk] : "";
-                            }
-                        });
-                        return cleanRow;
-                    });
+                    cleanWorksheets[cleanKey] = (dbWorksheets[key] || []).map(row => ({
+                        status: row.status || "🟡 進行中",
+                        closed: row.closed || "N",
+                        priority: row.priority || "⚡ 普通",
+                        category: row.category || "",
+                        task: row.task || "",
+                        assignee: row.assignee || "",
+                        startDate: row.startDate || "",
+                        dueDate: row.dueDate || "",
+                        remarks: row.remarks || ""
+                    }));
                 }
             });
 
@@ -585,7 +559,6 @@
             }
         };
 
-        // 自動偵測文字中的網址並轉換為可點擊超連結
         function parseTextWithLinks(text) {
             if (!text) return "";
             const urlRegex = /(https?:\/\/[^\s]+)/g;
@@ -623,18 +596,19 @@
         }
 
         function getStatusColorClass(status) {
-            if (status.includes("已完成")) return "bg-emerald-100 text-emerald-800 border-emerald-300 font-extrabold";
-            if (status.includes("進行中")) return "bg-amber-100 text-amber-800 border-amber-300 font-extrabold";
+            const s = status || "🟡 進行中";
+            if (s.includes("已完成")) return "bg-emerald-100 text-emerald-800 border-emerald-300 font-extrabold";
+            if (s.includes("進行中")) return "bg-amber-100 text-amber-800 border-amber-300 font-extrabold";
             return "bg-red-100 text-red-800 border-red-300 font-extrabold";
         }
 
         function getPriorityColorClass(priority) {
-            if (priority.includes("緊急")) return "bg-red-100 text-red-900 border-red-300 font-extrabold";
-            if (priority.includes("普通")) return "bg-blue-50 text-blue-800 border-blue-200 font-bold";
+            const p = priority || "⚡ 普通";
+            if (p.includes("緊急")) return "bg-red-100 text-red-900 border-red-300 font-extrabold";
+            if (p.includes("普通")) return "bg-blue-50 text-blue-800 border-blue-200 font-bold";
             return "bg-slate-100 text-slate-700 border-slate-300 font-bold";
         }
 
-        // 搜尋與篩選控制
         window.handleSearchInput = function(query) {
             currentSearchQuery = query.toLowerCase().trim();
             renderTable();
@@ -645,22 +619,18 @@
             ['all', 'unclosed', 'urgent', 'my'].forEach(m => {
                 const btn = document.getElementById(`filter-${m}-btn`);
                 if (btn) {
-                    if (m === mode) {
-                        btn.className = "px-3 py-1.5 rounded-lg text-xs font-extrabold bg-blue-700 text-white transition shadow-sm";
-                    } else {
-                        btn.className = "px-3 py-1.5 rounded-lg text-xs font-extrabold text-slate-700 hover:bg-slate-200 transition";
-                    }
+                    if (m === mode) btn.className = "px-3 py-1.5 rounded-lg text-xs font-extrabold bg-blue-700 text-white transition shadow-sm";
+                    else btn.className = "px-3 py-1.5 rounded-lg text-xs font-extrabold text-slate-700 hover:bg-slate-200 transition";
                 }
             });
             renderTable();
         };
 
-        // 優先權排序
         window.sortByPriority = function() {
             collectTableData();
             const data = dbWorksheets[currentSheetName] || [];
             const weight = { "🔥 緊急重要": 1, "⚡ 普通": 2, "☕ 長期追蹤": 3 };
-            data.sort((a, b) => (weight[a.priority] || 2) - (weight[b.priority] || 2));
+            data.sort((a, b) => (weight[a.priority || "⚡ 普通"] || 2) - (weight[b.priority || "⚡ 普通"] || 2));
             dbWorksheets[currentSheetName] = data;
             renderTable();
             saveToFirebase(true);
@@ -674,13 +644,12 @@
             const rawData = dbWorksheets[currentSheetName] || [];
 
             rawData.forEach((row, index) => {
-                // 條件過濾邏輯
                 if (currentFilterMode === 'unclosed' && row.closed === 'Y') return;
-                if (currentFilterMode === 'urgent' && !row.priority?.includes('緊急')) return;
-                if (currentFilterMode === 'my' && !row.assignee?.includes('劉金勳')) return;
+                if (currentFilterMode === 'urgent' && !(row.priority || "").includes('緊急')) return;
+                if (currentFilterMode === 'my' && !(row.assignee || "").includes('劉金勳')) return;
 
                 if (currentSearchQuery) {
-                    const matchStr = `${row.category} ${row.task} ${row.assignee} ${row.remarks}`.toLowerCase();
+                    const matchStr = `${row.category || ''} ${row.task || ''} ${row.assignee || ''} ${row.remarks || ''}`.toLowerCase();
                     if (!matchStr.includes(currentSearchQuery)) return;
                 }
 
@@ -715,7 +684,7 @@
                         <input type="text" value="${row.category || ''}" onchange="updateRowData(${index}, 'category', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2 py-1.5 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                     </td>
                     <td class="py-2.5 px-2">
-                        <input type="text" value="${row.task || ''}" onchange="updateRowData(${index}, 'task', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-1.5 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="輸入任務...">
+                        <input type="text" value="${row.task || ''}" onchange="updateRowData(${index}, 'task', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2 py-1.5 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="輸入任務...">
                         <div class="text-[11px] text-slate-500 mt-1 font-normal">${parseTextWithLinks(row.task)}</div>
                     </td>
                     <td class="py-2.5 px-2">
@@ -733,15 +702,9 @@
                         <div class="text-[11px] text-slate-500 mt-1 font-normal">${parseTextWithLinks(row.remarks)}</div>
                     </td>
                     <td class="py-2.5 px-2 text-center flex items-center justify-center space-x-1">
-                        <button onclick="duplicateRow(${index})" class="text-blue-600 hover:text-blue-800 p-1.5 transition rounded-lg hover:bg-blue-50 shadow-sm" title="複製此列">
-                            <i class="fa-solid fa-copy"></i>
-                        </button>
-                        <button onclick="copyToAnotherSheet(${index})" class="text-indigo-600 hover:text-indigo-800 p-1.5 transition rounded-lg hover:bg-indigo-50 shadow-sm" title="跨表複製">
-                            <i class="fa-solid fa-share-from-square"></i>
-                        </button>
-                        <button onclick="deleteRow(${index})" class="text-red-600 hover:text-red-800 p-1.5 transition rounded-lg hover:bg-red-50 shadow-sm" title="刪除此列">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
+                        <button onclick="duplicateRow(${index})" class="text-blue-600 hover:text-blue-800 p-1.5 transition rounded-lg hover:bg-blue-50 shadow-sm" title="複製此列"><i class="fa-solid fa-copy"></i></button>
+                        <button onclick="copyToAnotherSheet(${index})" class="text-indigo-600 hover:text-indigo-800 p-1.5 transition rounded-lg hover:bg-indigo-50 shadow-sm" title="跨表複製"><i class="fa-solid fa-share-from-square"></i></button>
+                        <button onclick="deleteRow(${index})" class="text-red-600 hover:text-red-800 p-1.5 transition rounded-lg hover:bg-red-50 shadow-sm" title="刪除此列"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -794,7 +757,6 @@
             saveToFirebase(true);
         };
 
-        // 快速複製一列
         window.duplicateRow = function(index) {
             collectTableData();
             const target = dbWorksheets[currentSheetName][index];
@@ -804,7 +766,6 @@
             saveToFirebase(true);
         };
 
-        // 跨表複製功能
         window.copyToAnotherSheet = function(index) {
             collectTableData();
             const sheetNames = Object.keys(dbWorksheets).filter(s => s !== currentSheetName);
@@ -832,7 +793,6 @@
             }
         };
 
-        // 甘特圖渲染
         function renderGanttChart() {
             collectTableData();
             const container = document.getElementById("gantt-container");
@@ -845,9 +805,7 @@
             }
 
             workData.forEach((item, idx) => {
-                const start = item.startDate ? new Date(item.startDate) : new Date();
-                const due = item.dueDate ? new Date(item.dueDate) : new Date();
-                const progressColor = item.closed === 'Y' ? 'bg-emerald-500' : (item.priority?.includes('緊急') ? 'bg-red-500' : 'bg-blue-600');
+                const progressColor = item.closed === 'Y' ? 'bg-emerald-500' : ((item.priority || "").includes('緊急') ? 'bg-red-500' : 'bg-blue-600');
                 
                 const rowDiv = document.createElement("div");
                 rowDiv.className = "bg-slate-50 p-3 rounded-xl border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-2";
@@ -880,7 +838,6 @@
             const analysisBtn = document.getElementById("view-analysis-btn");
             const toolbar = document.getElementById("table-toolbar");
 
-            // Reset styles
             [tableBtn, ganttBtn, analysisBtn].forEach(btn => {
                 btn.className = "px-3.5 py-2 rounded-lg font-extrabold text-xs text-slate-700 hover:bg-slate-200 transition";
             });
@@ -975,7 +932,7 @@
         function updateAnalysisCharts() {
             const workData = dbWorksheets[currentSheetName] || [];
             const total = workData.length;
-            const completed = workData.filter(item => item.closed === 'Y' || item.status.includes('已完成')).length;
+            const completed = workData.filter(item => item.closed === 'Y' || (item.status || "").includes('已完成')).length;
             const ongoing = total - completed;
             const rate = total > 0 ? Math.round((completed / total) * 100) : 0;
 
@@ -986,8 +943,9 @@
 
             const statusCounts = { "已完成": 0, "進行中": 0, "待處理": 0 };
             workData.forEach(item => {
-                if (item.status.includes("已完成")) statusCounts["已完成"]++;
-                else if (item.status.includes("進行中")) statusCounts["進行中"]++;
+                const s = item.status || "";
+                if (s.includes("已完成")) statusCounts["已完成"]++;
+                else if (s.includes("進行中")) statusCounts["進行中"]++;
                 else statusCounts["待處理"]++;
             });
 
