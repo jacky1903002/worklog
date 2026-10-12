@@ -150,20 +150,20 @@
                 <div class="overflow-x-auto w-full">
                     <table class="w-full text-left border-collapse" id="work-table">
                         <thead>
-                            <tr class="bg-slate-200 text-slate-900 text-xs uppercase tracking-wider border-b-2 border-slate-300 font-extrabold">
-                                <th class="py-4 px-3 text-center w-12">項次</th>
-                                <th class="py-4 px-3 w-36">狀態 (Status)</th>
-                                <th class="py-4 px-3 w-20 text-center">結案</th>
-                                <th class="py-4 px-3 w-36 cursor-pointer hover:text-blue-700" onclick="sortByPriority()" title="點擊依優先權排序">
+                            <tr class="bg-slate-200 text-slate-900 text-xs border-b-2 border-slate-300 font-extrabold align-middle">
+                                <th class="py-3 px-3 text-center w-12 whitespace-nowrap">項次</th>
+                                <th class="py-3 px-3 w-32 whitespace-nowrap">狀態 (STATUS)</th>
+                                <th class="py-3 px-2 text-center w-20 whitespace-nowrap">結案</th>
+                                <th class="py-3 px-3 w-36 whitespace-nowrap cursor-pointer hover:text-blue-700" onclick="sortByPriority()" title="點擊依優先權排序">
                                     優先權 <i class="fa-solid fa-sort ml-1"></i>
                                 </th>
-                                <th class="py-4 px-3 w-40">專案 / 類別</th>
-                                <th class="py-4 px-3 min-w-[220px]">工作項目 / 內容描述</th>
-                                <th class="py-4 px-3 w-44">負責人</th>
-                                <th class="py-4 px-3 w-36">建立日期</th>
-                                <th class="py-4 px-3 w-48">到期日 (智慧提示)</th>
-                                <th class="py-4 px-3 min-w-[220px]">備註 / 連結</th>
-                                <th class="py-4 px-3 text-center w-28">操作</th>
+                                <th class="py-3 px-3 w-40 whitespace-nowrap">專案 / 類別</th>
+                                <th class="py-3 px-3 min-w-[180px] whitespace-nowrap">工作項目 / 內容描述</th>
+                                <th class="py-3 px-3 w-48 min-w-[130px] whitespace-nowrap">負責人</th>
+                                <th class="py-3 px-3 w-36 whitespace-nowrap">建立日期</th>
+                                <th class="py-3 px-3 w-48 whitespace-nowrap">到期日 (智慧提示)</th>
+                                <th class="py-3 px-3 min-w-[200px] whitespace-nowrap">備註 / 連結</th>
+                                <th class="py-3 px-3 text-center w-28 whitespace-nowrap">操作</th>
                             </tr>
                         </thead>
                         <tbody id="table-body" class="divide-y divide-slate-200 text-sm font-bold text-slate-900"></tbody>
@@ -352,7 +352,6 @@
                             dbWorksheets[sheet].forEach(row => {
                                 if (!row.priority) row.priority = "⚡ 普通";
                                 if (!row.closed) row.closed = "O";
-                                // 依據結案代號自動帶出燈號
                                 if (row.closed === "O") row.status = "🟢 已完成";
                                 else if (row.closed === "△") row.status = "🟡 進行中";
                                 else if (row.closed === "X") row.status = "🔴 待處理";
@@ -650,7 +649,7 @@
                 tr.innerHTML = `
                     <td class="py-3.5 px-3 text-center font-extrabold text-slate-500">${index + 1}</td>
                     <td class="py-3 px-3">
-                        <div data-field="status" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs text-center shadow-sm ${statusClass}">
+                        <div data-field="status" class="w-full border-2 rounded-xl px-2 py-2 text-xs text-center shadow-sm ${statusClass}">
                             ${row.status || '🟡 進行中'}
                         </div>
                     </td>
@@ -686,10 +685,10 @@
                         </select>
                     </td>
                     <td class="py-3 px-3">
-                        <input type="date" data-field="startDate" value="${row.startDate || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                        <input type="date" data-field="startDate" value="${row.startDate || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                     </td>
                     <td class="py-3 px-3">
-                        <input type="date" data-field="dueDate" value="${row.dueDate || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                        <input type="date" data-field="dueDate" value="${row.dueDate || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                         <div class="mt-1">${getDueDateBadge(row.dueDate, row.closed)}</div>
                     </td>
                     <td class="py-3 px-3">
