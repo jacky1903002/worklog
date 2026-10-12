@@ -135,7 +135,7 @@
         <!-- 主要內容區 -->
         <main class="flex-1 py-6 px-6 w-full">
             
-            <!-- 區塊一：工作日誌表格 (加寬各欄位確保文字不被隱藏) -->
+            <!-- 區塊一：工作日誌表格 -->
             <div id="section-table" class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden w-full">
                 <div class="px-6 py-4 bg-slate-100 border-b border-slate-200 flex flex-wrap justify-between items-center gap-2">
                     <h3 id="current-sheet-title" ondblclick="renameCurrentSheetHeader()" class="font-extrabold text-slate-900 text-base cursor-pointer hover:text-blue-700 transition select-none flex items-center" title="💡 雙擊即可自由編輯工作表標題名稱">
@@ -560,7 +560,6 @@
             });
         }
 
-        // 縮小提醒標籤字體與間距，確保完整呈現不被截斷
         function getDueDateBadge(dueDateStr, isClosed) {
             if (!dueDateStr) return `<span class="text-slate-400">-</span>`;
             if (isClosed === 'Y') return `<span class="text-slate-600 font-extrabold whitespace-nowrap">${dueDateStr} (已結案)</span>`;
@@ -655,44 +654,44 @@
                 tr.innerHTML = `
                     <td class="py-3.5 px-3 text-center font-extrabold text-slate-500">${index + 1}</td>
                     <td class="py-3 px-3">
-                        <select onchange="updateRowData(${index}, 'status', this.value); renderTable();" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm ${statusClass}">
+                        <select data-field="status" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm ${statusClass}">
                             <option value="🟢 已完成" ${row.status === '🟢 已完成' ? 'selected' : ''}>🟢 已完成</option>
                             <option value="🟡 進行中" ${row.status === '🟡 進行中' ? 'selected' : ''}>🟡 進行中</option>
                             <option value="🔴 待處理" ${row.status === '🔴 待處理' ? 'selected' : ''}>🔴 待處理</option>
                         </select>
                     </td>
                     <td class="py-3 px-2 text-center">
-                        <select onchange="updateRowData(${index}, 'closed', this.value); renderTable();" class="w-14 text-center bg-white border-2 border-slate-300 rounded-xl px-1 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-extrabold shadow-sm">
+                        <select data-field="closed" class="w-14 text-center bg-white border-2 border-slate-300 rounded-xl px-1 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-extrabold shadow-sm">
                             <option value="Y" ${row.closed === 'Y' ? 'selected' : ''}>Y</option>
                             <option value="N" ${row.closed === 'N' ? 'selected' : ''}>N</option>
                         </select>
                     </td>
                     <td class="py-3 px-3">
-                        <select onchange="updateRowData(${index}, 'priority', this.value); renderTable();" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm ${priorityClass}">
+                        <select data-field="priority" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm ${priorityClass}">
                             <option value="🔥 緊急重要" ${row.priority === '🔥 緊急重要' ? 'selected' : ''}>🔥 緊急重要</option>
                             <option value="⚡ 普通" ${row.priority === '⚡ 普通' ? 'selected' : ''}>⚡ 普通</option>
                             <option value="☕ 長期追蹤" ${row.priority === '☕ 長期追蹤' ? 'selected' : ''}>☕ 長期追蹤</option>
                         </select>
                     </td>
                     <td class="py-3 px-3">
-                        <input type="text" value="${row.category || ''}" onchange="updateRowData(${index}, 'category', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                        <input type="text" data-field="category" value="${row.category || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                     </td>
                     <td class="py-3 px-3">
-                        <input type="text" value="${row.task || ''}" onchange="updateRowData(${index}, 'task', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="輸入任務...">
+                        <input type="text" data-field="task" value="${row.task || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="輸入任務...">
                         <div class="text-[11px] text-slate-500 mt-1 font-normal">${parseTextWithLinks(row.task)}</div>
                     </td>
                     <td class="py-3 px-3">
-                        <input type="text" value="${row.assignee || ''}" onchange="updateRowData(${index}, 'assignee', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                        <input type="text" data-field="assignee" value="${row.assignee || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                     </td>
                     <td class="py-3 px-3">
-                        <input type="date" value="${row.startDate || ''}" onchange="updateRowData(${index}, 'startDate', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                        <input type="date" data-field="startDate" value="${row.startDate || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                     </td>
                     <td class="py-3 px-3">
-                        <input type="date" value="${row.dueDate || ''}" onchange="updateRowData(${index}, 'dueDate', this.value); renderTable();" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                        <input type="date" data-field="dueDate" value="${row.dueDate || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                         <div class="mt-1">${getDueDateBadge(row.dueDate, row.closed)}</div>
                     </td>
                     <td class="py-3 px-3">
-                        <input type="text" value="${row.remarks || ''}" onchange="updateRowData(${index}, 'remarks', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="備註或網址...">
+                        <input type="text" data-field="remarks" value="${row.remarks || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="備註或網址...">
                         <div class="text-[11px] text-slate-500 mt-1 font-normal">${parseTextWithLinks(row.remarks)}</div>
                     </td>
                     <td class="py-3 px-3 text-center flex items-center justify-center space-x-1">
@@ -701,6 +700,20 @@
                         <button onclick="deleteRow(${index})" class="text-red-600 hover:text-red-800 p-2 transition rounded-lg hover:bg-red-50 shadow-sm" title="刪除此列"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 `;
+                
+                // 綁定即時輸入監聽，確保每個欄位（包含負責人與專案類別）都能獨立正常填寫與自動儲存
+                tr.querySelectorAll("select, input").forEach(el => {
+                    el.addEventListener("input", () => {
+                        updateRowData(index, el.getAttribute("data-field"), el.value);
+                    });
+                    el.addEventListener("change", () => {
+                        updateRowData(index, el.getAttribute("data-field"), el.value);
+                        if(el.getAttribute("data-field") === 'status' || el.getAttribute("data-field") === 'closed' || el.getAttribute("data-field") === 'dueDate') {
+                            renderTable();
+                        }
+                    });
+                });
+
                 tbody.appendChild(tr);
             });
         };
@@ -709,28 +722,31 @@
             const rows = document.querySelectorAll("#table-body tr");
             const workData = [];
             rows.forEach(tr => {
-                const inputs = tr.querySelectorAll("select, input");
-                if (inputs.length >= 9) {
-                    workData.push({
-                        status: inputs[0].value,
-                        closed: inputs[1].value,
-                        priority: inputs[2].value,
-                        category: inputs[3].value,
-                        task: inputs[4].value,
-                        assignee: inputs[5].value,
-                        startDate: inputs[6].value,
-                        dueDate: inputs[7].value,
-                        remarks: inputs[8].value
-                    });
-                }
+                const getVal = (field) => {
+                    const el = tr.querySelector(`[data-field="${field}"]`);
+                    return el ? el.value : "";
+                };
+                workData.push({
+                    status: getVal('status'),
+                    closed: getVal('closed'),
+                    priority: getVal('priority'),
+                    category: getVal('category'),
+                    task: getVal('task'),
+                    assignee: getVal('assignee'),
+                    startDate: getVal('startDate'),
+                    dueDate: getVal('dueDate'),
+                    remarks: getVal('remarks')
+                });
             });
             dbWorksheets[currentSheetName] = workData;
         }
 
         window.updateRowData = function(index, field, value) {
             collectTableData();
-            dbWorksheets[currentSheetName][index][field] = value;
-            saveToFirebase(true);
+            if(dbWorksheets[currentSheetName][index]) {
+                dbWorksheets[currentSheetName][index][field] = value;
+                saveToFirebase(true);
+            }
         };
 
         window.addNewRow = function() {
