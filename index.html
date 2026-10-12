@@ -135,7 +135,7 @@
         <!-- 主要內容區 -->
         <main class="flex-1 py-6 px-6 w-full">
             
-            <!-- 區塊一：工作日誌表格 -->
+            <!-- 區塊一：工作日誌表格 (加寬各欄位確保文字不被隱藏) -->
             <div id="section-table" class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden w-full">
                 <div class="px-6 py-4 bg-slate-100 border-b border-slate-200 flex flex-wrap justify-between items-center gap-2">
                     <h3 id="current-sheet-title" ondblclick="renameCurrentSheetHeader()" class="font-extrabold text-slate-900 text-base cursor-pointer hover:text-blue-700 transition select-none flex items-center" title="💡 雙擊即可自由編輯工作表標題名稱">
@@ -152,28 +152,22 @@
                         <thead>
                             <tr class="bg-slate-200 text-slate-900 text-xs uppercase tracking-wider border-b-2 border-slate-300 font-extrabold">
                                 <th class="py-4 px-3 text-center w-12">項次</th>
-                                <th class="py-4 px-3 w-32">狀態 (Status)</th>
+                                <th class="py-4 px-3 w-40">狀態 (Status)</th>
                                 <th class="py-4 px-3 w-20 text-center">結案</th>
-                                <th class="py-4 px-3 w-36 cursor-pointer hover:text-blue-700" onclick="sortByPriority()" title="點擊依優先權排序">
+                                <th class="py-4 px-3 w-40 cursor-pointer hover:text-blue-700" onclick="sortByPriority()" title="點擊依優先權排序">
                                     優先權 <i class="fa-solid fa-sort ml-1"></i>
                                 </th>
-                                <th class="py-4 px-3 w-36">專案 / 類別</th>
-                                <th class="py-4 px-3 min-w-[260px]">工作項目 / 內容描述</th>
-                                <th class="py-4 px-3 w-28">負責人</th>
-                                <th class="py-4 px-3 w-32">建立日期</th>
-                                <th class="py-4 px-3 w-40">到期日 (智慧提示)</th>
-                                <th class="py-4 px-3 min-w-[200px]">備註 / 連結</th>
-                                <th class="py-4 px-3 text-center w-28">操作</th>
+                                <th class="py-4 px-3 w-48">專案 / 類別</th>
+                                <th class="py-4 px-3 min-w-[300px]">工作項目 / 內容描述</th>
+                                <th class="py-4 px-3 w-36">負責人</th>
+                                <th class="py-4 px-3 w-36">建立日期</th>
+                                <th class="py-4 px-3 w-48">到期日 (智慧提示)</th>
+                                <th class="py-4 px-3 min-w-[280px]">備註 / 連結</th>
+                                <th class="py-4 px-3 text-center w-32">操作</th>
                             </tr>
                         </thead>
                         <tbody id="table-body" class="divide-y divide-slate-200 text-sm font-bold text-slate-900"></tbody>
                     </table>
-                </div>
-                <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-between items-center text-xs font-extrabold text-slate-600">
-                    <span>提示：支援網址自動偵測轉為超連結、一鍵複製列位及跨表移動。</span>
-                    <button onclick="addNewRow()" class="text-blue-700 hover:text-blue-900 font-extrabold flex items-center">
-                        <i class="fa-solid fa-plus mr-1"></i>新增一列
-                    </button>
                 </div>
             </div>
 
@@ -353,7 +347,6 @@
                 const data = snapshot.val();
                 if (data) {
                     dbWorksheets = data;
-                    // 安全檢查：確保每筆資料都有必要的欄位，避免讀取舊資料時出錯
                     Object.keys(dbWorksheets).forEach(sheet => {
                         if (Array.isArray(dbWorksheets[sheet])) {
                             dbWorksheets[sheet].forEach(row => {
@@ -567,9 +560,10 @@
             });
         }
 
+        // 縮小提醒標籤字體與間距，確保完整呈現不被截斷
         function getDueDateBadge(dueDateStr, isClosed) {
             if (!dueDateStr) return `<span class="text-slate-400">-</span>`;
-            if (isClosed === 'Y') return `<span class="text-slate-600 font-extrabold">${dueDateStr} (已結案)</span>`;
+            if (isClosed === 'Y') return `<span class="text-slate-600 font-extrabold whitespace-nowrap">${dueDateStr} (已結案)</span>`;
 
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -583,16 +577,16 @@
                 const overdue = Math.abs(diffDays);
                 if (overdue > 5) {
                     badgeClass = "bg-red-100 text-red-900 border border-red-300";
-                    indicator = ` <span class="text-[10px] bg-red-600 text-white px-1.5 py-0.5 rounded-full ml-1 font-extrabold shadow-sm">逾期 ${overdue}天</span>`;
+                    indicator = ` <span class="text-[9px] bg-red-600 text-white px-1 py-0.5 rounded-full ml-0.5 font-extrabold whitespace-nowrap shadow-sm">逾期${overdue}天</span>`;
                 } else {
                     badgeClass = "bg-amber-100 text-amber-900 border border-amber-300";
-                    indicator = ` <span class="text-[10px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full ml-1 font-extrabold shadow-sm">逾期 ${overdue}天</span>`;
+                    indicator = ` <span class="text-[9px] bg-amber-500 text-white px-1 py-0.5 rounded-full ml-0.5 font-extrabold whitespace-nowrap shadow-sm">逾期${overdue}天</span>`;
                 }
             } else if (diffDays <= 1) {
                 badgeClass = "bg-yellow-100 text-yellow-900 border border-yellow-300";
-                indicator = ` <span class="text-[10px] bg-yellow-500 text-white px-1.5 py-0.5 rounded-full ml-1 font-extrabold shadow-sm">即將到期</span>`;
+                indicator = ` <span class="text-[9px] bg-yellow-500 text-white px-1 py-0.5 rounded-full ml-0.5 font-extrabold whitespace-nowrap shadow-sm">即將到期</span>`;
             }
-            return `<span class="px-2 py-1 rounded-xl text-xs font-extrabold ${badgeClass}">${dueDateStr}${indicator}</span>`;
+            return `<span class="px-2 py-0.5 rounded-lg text-xs font-extrabold whitespace-nowrap inline-flex items-center ${badgeClass}">${dueDateStr}${indicator}</span>`;
         }
 
         function getStatusColorClass(status) {
@@ -660,51 +654,51 @@
 
                 tr.innerHTML = `
                     <td class="py-3.5 px-3 text-center font-extrabold text-slate-500">${index + 1}</td>
-                    <td class="py-2.5 px-2">
-                        <select onchange="updateRowData(${index}, 'status', this.value); renderTable();" class="w-full border-2 rounded-xl px-2 py-1.5 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm ${statusClass}">
+                    <td class="py-3 px-3">
+                        <select onchange="updateRowData(${index}, 'status', this.value); renderTable();" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm ${statusClass}">
                             <option value="🟢 已完成" ${row.status === '🟢 已完成' ? 'selected' : ''}>🟢 已完成</option>
                             <option value="🟡 進行中" ${row.status === '🟡 進行中' ? 'selected' : ''}>🟡 進行中</option>
                             <option value="🔴 待處理" ${row.status === '🔴 待處理' ? 'selected' : ''}>🔴 待處理</option>
                         </select>
                     </td>
-                    <td class="py-2.5 px-2 text-center">
-                        <select onchange="updateRowData(${index}, 'closed', this.value); renderTable();" class="w-14 text-center bg-white border-2 border-slate-300 rounded-xl px-1 py-1.5 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-extrabold shadow-sm">
+                    <td class="py-3 px-2 text-center">
+                        <select onchange="updateRowData(${index}, 'closed', this.value); renderTable();" class="w-14 text-center bg-white border-2 border-slate-300 rounded-xl px-1 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-extrabold shadow-sm">
                             <option value="Y" ${row.closed === 'Y' ? 'selected' : ''}>Y</option>
                             <option value="N" ${row.closed === 'N' ? 'selected' : ''}>N</option>
                         </select>
                     </td>
-                    <td class="py-2.5 px-2">
-                        <select onchange="updateRowData(${index}, 'priority', this.value); renderTable();" class="w-full border-2 rounded-xl px-2 py-1.5 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm ${priorityClass}">
+                    <td class="py-3 px-3">
+                        <select onchange="updateRowData(${index}, 'priority', this.value); renderTable();" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm ${priorityClass}">
                             <option value="🔥 緊急重要" ${row.priority === '🔥 緊急重要' ? 'selected' : ''}>🔥 緊急重要</option>
                             <option value="⚡ 普通" ${row.priority === '⚡ 普通' ? 'selected' : ''}>⚡ 普通</option>
                             <option value="☕ 長期追蹤" ${row.priority === '☕ 長期追蹤' ? 'selected' : ''}>☕ 長期追蹤</option>
                         </select>
                     </td>
-                    <td class="py-2.5 px-2">
-                        <input type="text" value="${row.category || ''}" onchange="updateRowData(${index}, 'category', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2 py-1.5 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                    <td class="py-3 px-3">
+                        <input type="text" value="${row.category || ''}" onchange="updateRowData(${index}, 'category', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                     </td>
-                    <td class="py-2.5 px-2">
-                        <input type="text" value="${row.task || ''}" onchange="updateRowData(${index}, 'task', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2 py-1.5 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="輸入任務...">
+                    <td class="py-3 px-3">
+                        <input type="text" value="${row.task || ''}" onchange="updateRowData(${index}, 'task', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="輸入任務...">
                         <div class="text-[11px] text-slate-500 mt-1 font-normal">${parseTextWithLinks(row.task)}</div>
                     </td>
-                    <td class="py-2.5 px-2">
-                        <input type="text" value="${row.assignee || ''}" onchange="updateRowData(${index}, 'assignee', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2 py-1.5 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                    <td class="py-3 px-3">
+                        <input type="text" value="${row.assignee || ''}" onchange="updateRowData(${index}, 'assignee', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                     </td>
-                    <td class="py-2.5 px-2">
-                        <input type="date" value="${row.startDate || ''}" onchange="updateRowData(${index}, 'startDate', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2 py-1.5 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                    <td class="py-3 px-3">
+                        <input type="date" value="${row.startDate || ''}" onchange="updateRowData(${index}, 'startDate', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                     </td>
-                    <td class="py-2.5 px-2">
-                        <input type="date" value="${row.dueDate || ''}" onchange="updateRowData(${index}, 'dueDate', this.value); renderTable();" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2 py-1.5 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                    <td class="py-3 px-3">
+                        <input type="date" value="${row.dueDate || ''}" onchange="updateRowData(${index}, 'dueDate', this.value); renderTable();" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                         <div class="mt-1">${getDueDateBadge(row.dueDate, row.closed)}</div>
                     </td>
-                    <td class="py-2.5 px-2">
-                        <input type="text" value="${row.remarks || ''}" onchange="updateRowData(${index}, 'remarks', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2 py-1.5 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="備註或網址...">
+                    <td class="py-3 px-3">
+                        <input type="text" value="${row.remarks || ''}" onchange="updateRowData(${index}, 'remarks', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="備註或網址...">
                         <div class="text-[11px] text-slate-500 mt-1 font-normal">${parseTextWithLinks(row.remarks)}</div>
                     </td>
-                    <td class="py-2.5 px-2 text-center flex items-center justify-center space-x-1">
-                        <button onclick="duplicateRow(${index})" class="text-blue-600 hover:text-blue-800 p-1.5 transition rounded-lg hover:bg-blue-50 shadow-sm" title="複製此列"><i class="fa-solid fa-copy"></i></button>
-                        <button onclick="copyToAnotherSheet(${index})" class="text-indigo-600 hover:text-indigo-800 p-1.5 transition rounded-lg hover:bg-indigo-50 shadow-sm" title="跨表複製"><i class="fa-solid fa-share-from-square"></i></button>
-                        <button onclick="deleteRow(${index})" class="text-red-600 hover:text-red-800 p-1.5 transition rounded-lg hover:bg-red-50 shadow-sm" title="刪除此列"><i class="fa-solid fa-trash-can"></i></button>
+                    <td class="py-3 px-3 text-center flex items-center justify-center space-x-1">
+                        <button onclick="duplicateRow(${index})" class="text-blue-600 hover:text-blue-800 p-2 transition rounded-lg hover:bg-blue-50 shadow-sm" title="複製此列"><i class="fa-solid fa-copy"></i></button>
+                        <button onclick="copyToAnotherSheet(${index})" class="text-indigo-600 hover:text-indigo-800 p-2 transition rounded-lg hover:bg-indigo-50 shadow-sm" title="跨表複製"><i class="fa-solid fa-share-from-square"></i></button>
+                        <button onclick="deleteRow(${index})" class="text-red-600 hover:text-red-800 p-2 transition rounded-lg hover:bg-red-50 shadow-sm" title="刪除此列"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
