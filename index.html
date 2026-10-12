@@ -556,8 +556,8 @@
         };
 
         function getDueDateBadge(dueDateStr, closedVal) {
-            if (!dueDateStr) return `<span class="text-slate-400">-</span>`;
-            if (closedVal === 'O') return `<span class="text-slate-600 font-extrabold whitespace-nowrap">${dueDateStr} (已結案)</span>`;
+            if (!dueDateStr) return `<span class="text-slate-400 text-xs">-</span>`;
+            if (closedVal === 'O') return `<span class="text-slate-500 text-xs font-bold whitespace-nowrap">已結案</span>`;
 
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -565,22 +565,18 @@
             due.setHours(0, 0, 0, 0);
 
             const diffDays = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
-            let badgeClass = "text-slate-800", indicator = "";
-
+            
             if (diffDays < 0) {
                 const overdue = Math.abs(diffDays);
                 if (overdue > 5) {
-                    badgeClass = "bg-red-100 text-red-900 border border-red-300";
-                    indicator = ` <span class="text-[9px] bg-red-600 text-white px-1 py-0.5 rounded-full ml-0.5 font-extrabold whitespace-nowrap shadow-sm">逾期${overdue}天</span>`;
+                    return `<span class="px-2 py-0.5 rounded-md text-xs font-extrabold bg-red-600 text-white shadow-sm">逾期 (${overdue}天)</span>`;
                 } else {
-                    badgeClass = "bg-amber-100 text-amber-900 border border-amber-300";
-                    indicator = ` <span class="text-[9px] bg-amber-500 text-white px-1 py-0.5 rounded-full ml-0.5 font-extrabold whitespace-nowrap shadow-sm">逾期${overdue}天</span>`;
+                    return `<span class="px-2 py-0.5 rounded-md text-xs font-extrabold bg-amber-500 text-white shadow-sm">逾期 (${overdue}天)</span>`;
                 }
             } else if (diffDays <= 1) {
-                badgeClass = "bg-yellow-100 text-yellow-900 border border-yellow-300";
-                indicator = ` <span class="text-[9px] bg-yellow-500 text-white px-1 py-0.5 rounded-full ml-0.5 font-extrabold whitespace-nowrap shadow-sm">即將到期</span>`;
+                return `<span class="px-2 py-0.5 rounded-md text-xs font-extrabold bg-yellow-500 text-white shadow-sm">即將到期</span>`;
             }
-            return `<span class="px-2 py-0.5 rounded-lg text-xs font-extrabold whitespace-nowrap inline-flex items-center ${badgeClass}">${dueDateStr}${indicator}</span>`;
+            return `<span class="text-slate-400 text-xs">進行中</span>`;
         }
 
         function getStatusColorClass(status) {
