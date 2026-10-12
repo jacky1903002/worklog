@@ -152,18 +152,18 @@
                         <thead>
                             <tr class="bg-slate-200 text-slate-900 text-xs uppercase tracking-wider border-b-2 border-slate-300 font-extrabold">
                                 <th class="py-4 px-3 text-center w-12">項次</th>
-                                <th class="py-4 px-3 w-40">狀態 (Status)</th>
+                                <th class="py-4 px-3 w-36">狀態 (Status)</th>
                                 <th class="py-4 px-3 w-20 text-center">結案</th>
-                                <th class="py-4 px-3 w-40 cursor-pointer hover:text-blue-700" onclick="sortByPriority()" title="點擊依優先權排序">
+                                <th class="py-4 px-3 w-36 cursor-pointer hover:text-blue-700" onclick="sortByPriority()" title="點擊依優先權排序">
                                     優先權 <i class="fa-solid fa-sort ml-1"></i>
                                 </th>
                                 <th class="py-4 px-3 w-48">專案 / 類別</th>
-                                <th class="py-4 px-3 min-w-[300px]">工作項目 / 內容描述</th>
+                                <th class="py-4 px-3 min-w-[280px]">工作項目 / 內容描述</th>
                                 <th class="py-4 px-3 w-36">負責人</th>
                                 <th class="py-4 px-3 w-36">建立日期</th>
                                 <th class="py-4 px-3 w-48">到期日 (智慧提示)</th>
-                                <th class="py-4 px-3 min-w-[280px]">備註 / 連結</th>
-                                <th class="py-4 px-3 text-center w-32">操作</th>
+                                <th class="py-4 px-3 min-w-[260px]">備註 / 連結</th>
+                                <th class="py-4 px-3 text-center w-28">操作</th>
                             </tr>
                         </thead>
                         <tbody id="table-body" class="divide-y divide-slate-200 text-sm font-bold text-slate-900"></tbody>
@@ -552,14 +552,6 @@
             }
         };
 
-        function parseTextWithLinks(text) {
-            if (!text) return "";
-            const urlRegex = /(https?:\/\/[^\s]+)/g;
-            return text.replace(urlRegex, (url) => {
-                return `<a href="${url}" target="_blank" class="text-blue-600 underline hover:text-blue-800 break-all inline-flex items-center"><i class="fa-solid fa-arrow-up-right-from-square text-[10px] mr-1"></i>${url}</a>`;
-            });
-        }
-
         function getDueDateBadge(dueDateStr, isClosed) {
             if (!dueDateStr) return `<span class="text-slate-400">-</span>`;
             if (isClosed === 'Y') return `<span class="text-slate-600 font-extrabold whitespace-nowrap">${dueDateStr} (已結案)</span>`;
@@ -674,14 +666,13 @@
                         </select>
                     </td>
                     <td class="py-3 px-3">
-                        <input type="text" data-field="category" value="${row.category || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                        <input type="text" data-field="category" value="${row.category || ''}" placeholder="專案/類別" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                     </td>
                     <td class="py-3 px-3">
                         <input type="text" data-field="task" value="${row.task || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="輸入任務...">
-                        <div class="text-[11px] text-slate-500 mt-1 font-normal">${parseTextWithLinks(row.task)}</div>
                     </td>
                     <td class="py-3 px-3">
-                        <input type="text" data-field="assignee" value="${row.assignee || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                        <input type="text" data-field="assignee" value="${row.assignee || ''}" placeholder="負責人" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                     </td>
                     <td class="py-3 px-3">
                         <input type="date" data-field="startDate" value="${row.startDate || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
@@ -691,8 +682,7 @@
                         <div class="mt-1">${getDueDateBadge(row.dueDate, row.closed)}</div>
                     </td>
                     <td class="py-3 px-3">
-                        <input type="text" data-field="remarks" value="${row.remarks || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="備註或網址...">
-                        <div class="text-[11px] text-slate-500 mt-1 font-normal">${parseTextWithLinks(row.remarks)}</div>
+                        <input type="text" data-field="remarks" value="${row.remarks || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="備註...">
                     </td>
                     <td class="py-3 px-3 text-center flex items-center justify-center space-x-1">
                         <button onclick="duplicateRow(${index})" class="text-blue-600 hover:text-blue-800 p-2 transition rounded-lg hover:bg-blue-50 shadow-sm" title="複製此列"><i class="fa-solid fa-copy"></i></button>
@@ -701,7 +691,7 @@
                     </td>
                 `;
                 
-                // 綁定即時輸入監聽，確保每個欄位（包含負責人與專案類別）都能獨立正常填寫與自動儲存
+                // 動態綁定輸入監聽器
                 tr.querySelectorAll("select, input").forEach(el => {
                     el.addEventListener("input", () => {
                         updateRowData(index, el.getAttribute("data-field"), el.value);
