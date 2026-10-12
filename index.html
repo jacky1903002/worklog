@@ -364,8 +364,32 @@
             }, { onlyOnce: true });
         };
 
+        // 強化防呆：儲存至 Firebase (自動排除空白或無效 Key)
         window.saveToFirebase = function(isSilent = false) {
             collectTableData();
+            
+            if (!currentSheetName || currentSheetName.trim() === "") {
+                currentSheetName = "預設工作表";
+            }
+
+            const cleanWorksheets = {};
+            Object.keys(dbWorksheets).forEach(key => {
+                const cleanKey = sanitizeSheetName(key);
+                if (cleanKey && cleanKey.trim() !== "") {
+                    cleanWorksheets[cleanKey] = (dbWorksheets[key] || []).map(row => {
+                        const cleanRow = {};
+                        Object.keys(row).forEach(rk => {
+                            if (rk && rk.trim() !== "") {
+                                cleanRow[rk] = row[rk] !== undefined ? row[rk] : "";
+                            }
+                        });
+                        return cleanRow;
+                    });
+                }
+            });
+
+            dbWorksheets = cleanWorksheets;
+
             const dbRef = ref(database, "worklogs_multisheet");
             set(dbRef, dbWorksheets).then(() => {
                 const now = new Date();
@@ -647,6 +671,7 @@
             XLSX.writeFile(workbook, `${currentSheetName}_工作日誌報表.xlsx`);
         };
 
+        // 強化防呆：Excel 匯入
         window.importFromExcel = function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -657,29 +682,33 @@
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, { type: 'array' });
                     
-                    // 使用 Excel 的第一個工作表名稱（並經過安全清洗，過濾掉 . # $ / [ ] 等字元）
-                    const rawSheetName = workbook.SheetNames[0];
-                    const sheetName = sanitizeSheetName(rawSheetName);
+                    let rawSheetName = workbook.SheetNames[0] || "匯入工作表";
+                    let sheetName = sanitizeSheetName(rawSheetName);
+                    if (!sheetName || sheetName.trim() === "") {
+                        sheetName = "匯入工作表";
+                    }
                     
-                    const worksheet = workbook.Sheets[rawSheetName];
-                    const json = XLSX.utils.sheet_to_json(worksheet);
+                    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const json = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
 
                     if (json.length > 0) {
                         currentSheetName = sheetName;
                         dbWorksheets[currentSheetName] = json.map(row => ({
                             status: row["狀態 (Status)"] || "🟡 進行中",
                             closed: row["結案 (Y/N)"] || "N",
-                            category: row["專案 / 類別 (Project/Category)"] || "",
-                            task: row["工作項目 / 內容描述 (Task Description)"] || "",
-                            assignee: row["負責人 (Assignee)"] || "",
-                            startDate: row["建立日期 (Start Date)"] || "",
-                            dueDate: row["到期日 (Due Date)"] || "",
-                            remarks: row["備註 / 後續追蹤 (Remarks/Notes)"] || ""
+                            category: row["專案 / 類別 (Project/Category)"] || row["專案 / 類別"] || "",
+                            task: row["工作項目 / 內容描述 (Task Description)"] || row["工作項目 / 內容描述"] || "",
+                            assignee: row["負責人 (Assignee)"] || row["負責人"] || "",
+                            startDate: row["建立日期 (Start Date)"] || row["建立日期"] || "",
+                            dueDate: row["到期日 (Due Date)"] || row["到期日"] || "",
+                            remarks: row["備註 / 後續追蹤 (Remarks/Notes)"] || row["備註 / 後續追蹤"] || ""
                         }));
                         renderWorksheetTabs();
                         renderTable();
-                        saveToFirebase(true);
-                        alert(`Excel 成功匯入並建立工作表「${currentSheetName}」同步至雲端！`);
+                        saveToFirebase(true); 
+                        alert(`Excel 成功匯入並建立工作表「${currentSheetName}」並同步至雲端！`);
+                    } else {
+                        alert("匯入的檔案無有效數據！");
                     }
                 } catch (err) {
                     alert("匯入失敗，請確認檔案格式是否與範本相符：" + err.message);
