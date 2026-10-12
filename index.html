@@ -13,64 +13,64 @@
     <!-- Chart.js for Analysis -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-gray-100 min-h-screen font-sans text-gray-800">
+<body class="bg-slate-100 min-h-screen font-sans text-slate-900 font-semibold">
 
     <!-- 登入畫面 (Login Portal) -->
-    <div id="login-screen" class="fixed inset-0 bg-gray-900 bg-opacity-70 flex items-center justify-center z-50">
-        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
+    <div id="login-screen" class="fixed inset-0 bg-slate-950 bg-opacity-75 flex items-center justify-center z-50 backdrop-blur-sm">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md border border-slate-200">
             <div class="text-center mb-6">
-                <div class="bg-blue-600 text-white w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl shadow-md">
+                <div class="bg-blue-700 text-white w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl shadow-lg shadow-blue-500/30">
                     <i class="fa-solid fa-clipboard-check"></i>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-900">每日工作日誌系統</h2>
-                <p class="text-sm text-gray-500 mt-1">請登入 Firebase 帳號以繼續</p>
+                <h2 class="text-2xl font-bold text-slate-900 tracking-tight">每日工作日誌管理系統</h2>
+                <p class="text-sm text-slate-600 mt-1 font-bold">Feedback Technology Corp. 企業商業版</p>
             </div>
             <form id="login-form" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">電子郵件 (Email)</label>
-                    <input type="email" id="login-email" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="name@company.com">
+                    <label class="block text-sm font-bold text-slate-800 mb-1">電子郵件 (Email)</label>
+                    <input type="email" id="login-email" required class="w-full px-4 py-2.5 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold text-slate-900" placeholder="name@company.com">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">密碼 (Password)</label>
-                    <input type="password" id="login-password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="••••••••">
+                    <label class="block text-sm font-bold text-slate-800 mb-1">密碼 (Password)</label>
+                    <input type="password" id="login-password" required class="w-full px-4 py-2.5 border-2 border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold text-slate-900" placeholder="••••••••">
                 </div>
-                <div id="login-error" class="text-red-500 text-sm hidden"></div>
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition duration-200 shadow-md">
-                    登入系統
+                <div id="login-error" class="text-red-600 text-sm font-bold hidden"></div>
+                <button type="submit" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded-xl transition duration-200 shadow-lg shadow-blue-600/30">
+                    安全登入系統
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- 主應用程式介面 (Main App) -->
-    <div id="app-screen" class="hidden flex flex-col min-h-screen">
+    <!-- 主應用程式介面 (Main App - 全螢幕寬版滿版設計) -->
+    <div id="app-screen" class="hidden flex flex-col min-h-screen w-full">
         <!-- 頂端導覽列 -->
-        <header class="bg-white shadow-sm border-b border-gray-200 px-6 py-4 flex flex-wrap justify-between items-center gap-4">
+        <header class="bg-white shadow-md border-b border-slate-200 px-6 py-4 flex flex-wrap justify-between items-center gap-4 w-full">
             <div class="flex items-center space-x-3">
-                <div class="bg-blue-600 text-white p-2.5 rounded-lg shadow">
+                <div class="bg-blue-700 text-white p-3 rounded-xl shadow-md shadow-blue-600/30">
                     <i class="fa-solid fa-briefcase text-lg"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold text-gray-900">每日工作日誌管理系統</h1>
-                    <p class="text-xs text-gray-500">Feedback Technology Corp. | 多工作表管理與智慧提醒</p>
+                    <h1 class="text-xl font-extrabold text-slate-900 tracking-tight">每日工作日誌管理系統</h1>
+                    <p class="text-xs font-bold text-slate-600">Feedback Technology Corp. | 企業商業寬版</p>
                 </div>
             </div>
 
             <!-- 狀態列 & 登出 -->
-            <div class="flex items-center space-x-6 text-sm">
+            <div class="flex items-center space-x-6 text-sm font-bold">
                 <!-- 連線狀態 -->
-                <div class="flex items-center space-x-2 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200 shadow-inner">
-                    <span id="conn-dot" class="w-3 h-3 rounded-full bg-gray-400 inline-block"></span>
-                    <span id="conn-text" class="text-gray-600 font-medium">連線檢查中...</span>
+                <div class="flex items-center space-x-2 bg-slate-100 px-3.5 py-1.5 rounded-xl border border-slate-200 shadow-inner">
+                    <span id="conn-dot" class="w-3 h-3 rounded-full bg-slate-400 inline-block"></span>
+                    <span id="conn-text" class="text-slate-700">連線檢查中...</span>
                 </div>
                 <!-- 上次儲存時間 -->
-                <div class="text-gray-500 hidden sm:block">
-                    <i class="fa-regular fa-clock mr-1 text-gray-400"></i>上次儲存: <span id="last-saved-time" class="font-medium text-gray-700">尚未儲存</span>
+                <div class="text-slate-600 hidden sm:block">
+                    <i class="fa-regular fa-clock mr-1 text-slate-500"></i>上次儲存: <span id="last-saved-time" class="font-extrabold text-slate-800">尚未儲存</span>
                 </div>
                 <!-- 使用者帳號與登出 -->
-                <div class="flex items-center space-x-3 border-l pl-4 border-gray-200">
-                    <span id="user-display" class="text-gray-700 font-medium"></span>
-                    <button id="logout-btn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg transition text-xs font-semibold">
+                <div class="flex items-center space-x-3 border-l-2 pl-4 border-slate-200">
+                    <span id="user-display" class="text-slate-900 font-extrabold"></span>
+                    <button id="logout-btn" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-3.5 py-2 rounded-xl transition text-xs font-extrabold shadow-sm">
                         <i class="fa-solid fa-right-from-bracket mr-1"></i>登出
                     </button>
                 </div>
@@ -78,153 +78,156 @@
         </header>
 
         <!-- 工作表分頁列 (Tabs for Worksheets) -->
-        <div class="bg-gray-50 border-b border-gray-200 px-6 py-2.5 flex flex-wrap items-center justify-between gap-3">
-            <div id="worksheet-tabs" class="flex items-center space-x-2 overflow-x-auto py-1">
-                <!-- 動態載入工作表分頁 -->
+        <div class="bg-slate-200/70 border-b border-slate-300 px-6 py-2.5 flex flex-wrap items-center justify-between gap-3 w-full">
+            <div class="flex items-center space-x-2 overflow-x-auto py-1" id="worksheet-tabs">
+                <!-- 動態載入工作表分頁 (雙擊可修改名稱) -->
             </div>
             <div class="flex items-center space-x-2">
-                <button onclick="createNewSheet()" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition shadow-sm flex items-center">
-                    <i class="fa-solid fa-plus mr-1"></i>新增工作表
+                <button onclick="createNewSheet()" class="bg-blue-700 hover:bg-blue-800 text-white px-3.5 py-2 rounded-xl text-xs font-extrabold transition shadow-md shadow-blue-600/30 flex items-center">
+                    <i class="fa-solid fa-plus mr-1.5"></i>新增工作表
                 </button>
-                <button onclick="deleteCurrentSheet()" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-lg text-xs font-semibold transition border border-red-200 flex items-center">
-                    <i class="fa-solid fa-trash-can mr-1"></i>刪除當前工作表
+                <button onclick="deleteCurrentSheet()" class="bg-red-100 hover:bg-red-200 text-red-700 px-3.5 py-2 rounded-xl text-xs font-extrabold transition border border-red-300 flex items-center shadow-sm">
+                    <i class="fa-solid fa-trash-can mr-1.5"></i>刪除當前工作表
                 </button>
             </div>
         </div>
 
         <!-- 功能工具列與主要檢視頁籤 -->
-        <div class="bg-white border-b border-gray-200 px-6 py-3 flex flex-wrap justify-between items-center gap-3">
+        <div class="bg-white border-b border-slate-200 px-6 py-3.5 flex flex-wrap justify-between items-center gap-3 shadow-sm w-full">
             <div class="flex space-x-2">
-                <button onclick="switchView('table')" id="view-table-btn" class="px-4 py-2 rounded-lg font-medium text-sm bg-blue-600 text-white shadow-sm transition">
+                <button onclick="switchView('table')" id="view-table-btn" class="px-4 py-2.5 rounded-xl font-extrabold text-sm bg-blue-700 text-white shadow-md shadow-blue-600/30 transition">
                     <i class="fa-solid fa-table mr-2"></i>工作日誌表單
                 </button>
-                <button onclick="switchView('analysis')" id="view-analysis-btn" class="px-4 py-2 rounded-lg font-medium text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
+                <button onclick="switchView('analysis')" id="view-analysis-btn" class="px-4 py-2.5 rounded-xl font-extrabold text-sm bg-slate-100 text-slate-700 hover:bg-slate-200 transition">
                     <i class="fa-solid fa-chart-pie mr-2"></i>工作日誌分析
                 </button>
             </div>
 
             <!-- 表單操作按鈕群組 -->
-            <div id="table-toolbar" class="flex flex-wrap items-center gap-2">
-                <button onclick="addNewRow()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-lg text-sm font-medium transition shadow-sm flex items-center">
+            <div id="table-toolbar" class="flex flex-wrap items-center gap-2.5">
+                <button onclick="addNewRow()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2.5 rounded-xl text-sm font-extrabold transition shadow-md shadow-emerald-600/30 flex items-center">
                     <i class="fa-solid fa-plus mr-1.5"></i>新增列位
                 </button>
-                <button onclick="exportToExcel()" class="bg-green-600 hover:bg-green-700 text-white px-3.5 py-2 rounded-lg text-sm font-medium transition shadow-sm flex items-center">
+                <button onclick="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-sm font-extrabold transition shadow-md shadow-emerald-600/30 flex items-center">
                     <i class="fa-solid fa-file-excel mr-1.5"></i>匯出 Excel
                 </button>
-                <label class="bg-indigo-600 hover:bg-indigo-700 text-white px-3.5 py-2 rounded-lg text-sm font-medium transition shadow-sm cursor-pointer flex items-center">
+                <label class="bg-indigo-700 hover:bg-indigo-800 text-white px-4 py-2.5 rounded-xl text-sm font-extrabold transition shadow-md shadow-indigo-600/30 cursor-pointer flex items-center">
                     <i class="fa-solid fa-file-arrow-up mr-1.5"></i>匯入 Excel
                     <input type="file" id="import-file" accept=".xlsx, .xls" class="hidden" onchange="importFromExcel(event)">
                 </label>
-                <button onclick="saveToFirebase()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm flex items-center">
+                <button onclick="saveToFirebase()" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2.5 rounded-xl text-sm font-extrabold transition shadow-md shadow-blue-600/30 flex items-center">
                     <i class="fa-solid fa-cloud-arrow-up mr-1.5"></i>立即儲存至雲端
                 </button>
             </div>
         </div>
 
-        <!-- 主要內容區 -->
-        <main class="flex-1 p-6 max-w-7xl mx-auto w-full">
+        <!-- 主要內容區 (全螢幕寬版滿版 w-full px-6) -->
+        <main class="flex-1 py-6 px-6 w-full">
             
             <!-- 區塊一：工作日誌表格 -->
-            <div id="section-table" class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-                <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
-                    <h3 id="current-sheet-title" class="font-bold text-gray-800 text-base">目前工作表: 載入中...</h3>
-                    <div class="flex items-center space-x-4 text-xs">
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-yellow-400 inline-block mr-1"></span>即將到期(&lt;1天)</span>
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-orange-500 inline-block mr-1"></span>逾期&gt;3天</span>
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-red-600 inline-block mr-1"></span>逾期&gt;5天</span>
+            <div id="section-table" class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden w-full">
+                <div class="px-6 py-4 bg-slate-100 border-b border-slate-200 flex flex-wrap justify-between items-center gap-2">
+                    <!-- 表頭文字：可直接雙擊修改工作表名稱 -->
+                    <h3 id="current-sheet-title" ondblclick="renameCurrentSheetHeader()" class="font-extrabold text-slate-900 text-base cursor-pointer hover:text-blue-700 transition select-none flex items-center" title="💡 雙擊即可修改此工作表名稱">
+                        目前工作表: 載入中...
+                    </h3>
+                    <div class="flex items-center space-x-4 text-xs font-extrabold">
+                        <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-yellow-400 inline-block mr-1 shadow-sm"></span>即將到期(&lt;1天)</span>
+                        <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-orange-500 inline-block mr-1 shadow-sm"></span>逾期&gt;3天</span>
+                        <span class="flex items-center"><span class="w-3 h-3 rounded-full bg-red-600 inline-block mr-1 shadow-sm"></span>逾期&gt;5天</span>
                     </div>
                 </div>
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto w-full">
                     <table class="w-full text-left border-collapse" id="work-table">
                         <thead>
-                            <tr class="bg-gray-50 text-gray-700 text-xs uppercase tracking-wider border-b border-gray-200">
-                                <th class="py-3.5 px-4 font-semibold text-center w-16">項次</th>
-                                <th class="py-3.5 px-4 font-semibold w-36">狀態 (Status)</th>
-                                <th class="py-3.5 px-4 font-semibold w-24 text-center">結案 (Y/N)</th>
-                                <th class="py-3.5 px-4 font-semibold w-40">專案 / 類別</th>
-                                <th class="py-3.5 px-4 font-semibold min-w-[240px]">工作項目 / 內容描述</th>
-                                <th class="py-3.5 px-4 font-semibold w-28">負責人</th>
-                                <th class="py-3.5 px-4 font-semibold w-36">建立日期</th>
-                                <th class="py-3.5 px-4 font-semibold w-40">到期日 (智慧提示)</th>
-                                <th class="py-3.5 px-4 font-semibold min-w-[200px]">備註 / 後續追蹤</th>
-                                <th class="py-3.5 px-4 font-semibold text-center w-20">操作</th>
+                            <tr class="bg-slate-200 text-slate-900 text-xs uppercase tracking-wider border-b-2 border-slate-300 font-extrabold">
+                                <th class="py-4 px-4 text-center w-16">項次</th>
+                                <th class="py-4 px-4 w-36">狀態 (Status)</th>
+                                <th class="py-4 px-4 w-24 text-center">結案 (Y/N)</th>
+                                <th class="py-4 px-4 w-44">專案 / 類別</th>
+                                <th class="py-4 px-4 min-w-[280px]">工作項目 / 內容描述</th>
+                                <th class="py-4 px-4 w-32">負責人</th>
+                                <th class="py-4 px-4 w-36">建立日期</th>
+                                <th class="py-4 px-4 w-44">到期日 (智慧提示)</th>
+                                <th class="py-4 px-4 min-w-[240px]">備註 / 後續追蹤</th>
+                                <th class="py-4 px-4 text-center w-20">操作</th>
                             </tr>
                         </thead>
-                        <tbody id="table-body" class="divide-y divide-gray-200 text-sm">
+                        <tbody id="table-body" class="divide-y divide-slate-200 text-sm font-bold text-slate-900">
                             <!-- 動態產生列 -->
                         </tbody>
                     </table>
                 </div>
-                <div class="p-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center text-xs text-gray-500">
-                    <span>提示：所有欄位與名稱皆已依照範本鎖定。到期日會自動根據當前日期計算超期天數並顯示顏色警示。</span>
-                    <button onclick="addNewRow()" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
+                <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-between items-center text-xs font-extrabold text-slate-600">
+                    <span>提示：雙擊表頭標題「目前工作表: ...」亦可直接修改分頁名稱。所有欄位變動會即時同步至 Firebase 雲端。</span>
+                    <button onclick="addNewRow()" class="text-blue-700 hover:text-blue-900 font-extrabold flex items-center">
                         <i class="fa-solid fa-plus mr-1"></i>新增一列
                     </button>
                 </div>
             </div>
 
-            <!-- 區塊二：工作日誌分析與圖表 -->
-            <div id="section-analysis" class="hidden space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between">
+            <!-- 區塊二：工作日誌分析與圖表 (滿版佈局) -->
+            <div id="section-analysis" class="hidden space-y-6 w-full">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+                    <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200 flex items-center justify-between">
                         <div>
-                            <p class="text-xs text-gray-500 font-medium uppercase">總工作項目</p>
-                            <h3 id="stat-total" class="text-2xl font-bold text-gray-800 mt-1">0</h3>
+                            <p class="text-xs text-slate-500 font-extrabold uppercase">總工作項目</p>
+                            <h3 id="stat-total" class="text-3xl font-extrabold text-slate-900 mt-1">0</h3>
                         </div>
-                        <div class="bg-blue-50 text-blue-600 p-3 rounded-xl text-xl">
+                        <div class="bg-blue-100 text-blue-700 p-3.5 rounded-2xl text-xl shadow-inner">
                             <i class="fa-solid fa-list-check"></i>
                         </div>
                     </div>
-                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between">
+                    <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200 flex items-center justify-between">
                         <div>
-                            <p class="text-xs text-gray-500 font-medium uppercase">已結案 (Y)</p>
-                            <h3 id="stat-completed" class="text-2xl font-bold text-green-600 mt-1">0</h3>
+                            <p class="text-xs text-slate-500 font-extrabold uppercase">已結案 (Y)</p>
+                            <h3 id="stat-completed" class="text-3xl font-extrabold text-emerald-600 mt-1">0</h3>
                         </div>
-                        <div class="bg-green-50 text-green-600 p-3 rounded-xl text-xl">
+                        <div class="bg-emerald-100 text-emerald-700 p-3.5 rounded-2xl text-xl shadow-inner">
                             <i class="fa-solid fa-circle-check"></i>
                         </div>
                     </div>
-                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between">
+                    <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200 flex items-center justify-between">
                         <div>
-                            <p class="text-xs text-gray-500 font-medium uppercase">進行中 / 待處理</p>
-                            <h3 id="stat-ongoing" class="text-2xl font-bold text-amber-600 mt-1">0</h3>
+                            <p class="text-xs text-slate-500 font-extrabold uppercase">進行中 / 待處理</p>
+                            <h3 id="stat-ongoing" class="text-3xl font-extrabold text-amber-600 mt-1">0</h3>
                         </div>
-                        <div class="bg-amber-50 text-amber-600 p-3 rounded-xl text-xl">
+                        <div class="bg-amber-100 text-amber-700 p-3.5 rounded-2xl text-xl shadow-inner">
                             <i class="fa-solid fa-spinner"></i>
                         </div>
                     </div>
-                    <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between">
+                    <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200 flex items-center justify-between">
                         <div>
-                            <p class="text-xs text-gray-500 font-medium uppercase">結案達成率</p>
-                            <h3 id="stat-rate" class="text-2xl font-bold text-indigo-600 mt-1">0%</h3>
+                            <p class="text-xs text-slate-500 font-extrabold uppercase">結案達成率</p>
+                            <h3 id="stat-rate" class="text-3xl font-extrabold text-indigo-600 mt-1">0%</h3>
                         </div>
-                        <div class="bg-indigo-50 text-indigo-600 p-3 rounded-xl text-xl">
+                        <div class="bg-indigo-100 text-indigo-700 p-3.5 rounded-2xl text-xl shadow-inner">
                             <i class="fa-solid fa-chart-line"></i>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col justify-between">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200 flex flex-col justify-between">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-gray-800 text-base">工作狀態分布</h3>
-                            <button onclick="exportChartPNG('statusChart', '工作狀態分布圖.png')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center">
+                            <h3 class="font-extrabold text-slate-900 text-base">工作狀態分布</h3>
+                            <button onclick="exportChartPNG('statusChart', '工作狀態分布圖.png')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center shadow-sm">
                                 <i class="fa-solid fa-download mr-1.5"></i>匯出 PNG
                             </button>
                         </div>
-                        <div class="relative h-64 flex justify-center items-center">
+                        <div class="relative h-72 flex justify-center items-center">
                             <canvas id="statusChart"></canvas>
                         </div>
                     </div>
 
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col justify-between">
+                    <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200 flex flex-col justify-between">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-bold text-gray-800 text-base">專案 / 類別分佈</h3>
-                            <button onclick="exportChartPNG('projectChart', '專案類別分佈圖.png')" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center">
+                            <h3 class="font-extrabold text-slate-900 text-base">專案 / 類別分佈</h3>
+                            <button onclick="exportChartPNG('projectChart', '專案類別分佈圖.png')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center shadow-sm">
                                 <i class="fa-solid fa-download mr-1.5"></i>匯出 PNG
                             </button>
                         </div>
-                        <div class="relative h-64 flex justify-center items-center">
+                        <div class="relative h-72 flex justify-center items-center">
                             <canvas id="projectChart"></canvas>
                         </div>
                     </div>
@@ -294,7 +297,6 @@
             ]
         };
 
-        // 清洗工作表名稱，避免包含 Firebase 不合法的字元 (., #, $, /, [, ])
         function sanitizeSheetName(name) {
             if (!name) return "未命名工作表";
             return name.toString().replace(/[.#$*\/[\]]/g, "_").trim();
@@ -305,10 +307,10 @@
             const dot = document.getElementById("conn-dot");
             const text = document.getElementById("conn-text");
             if (snap.val() === true) {
-                dot.className = "w-3 h-3 rounded-full bg-green-500 inline-block animate-pulse";
+                dot.className = "w-3 h-3 rounded-full bg-emerald-500 inline-block animate-pulse shadow-sm";
                 text.textContent = "已連線至 Firebase";
             } else {
-                dot.className = "w-3 h-3 rounded-full bg-red-500 inline-block";
+                dot.className = "w-3 h-3 rounded-full bg-red-500 inline-block shadow-sm";
                 text.textContent = "連線中斷 / 離線";
             }
         });
@@ -364,7 +366,6 @@
             }, { onlyOnce: true });
         };
 
-        // 強化防呆：儲存至 Firebase (自動排除空白或無效 Key)
         window.saveToFirebase = function(isSilent = false) {
             collectTableData();
             
@@ -418,13 +419,48 @@
             Object.keys(dbWorksheets).forEach(sheetName => {
                 const btn = document.createElement("button");
                 const isActive = sheetName === currentSheetName;
-                btn.className = `px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center shadow-sm ${
-                    isActive ? 'bg-blue-600 text-white shadow' : 'bg-white text-gray-700 hover:bg-gray-200 border border-gray-300'
+                btn.className = `px-4 py-2 rounded-xl text-xs font-extrabold transition flex items-center shadow-sm cursor-pointer ${
+                    isActive ? 'bg-blue-700 text-white shadow-md shadow-blue-600/30' : 'bg-white text-slate-800 hover:bg-slate-100 border-2 border-slate-300'
                 }`;
-                btn.innerHTML = `<i class="fa-solid fa-file-excel mr-1.5 text-green-500"></i>${sheetName}`;
+                btn.innerHTML = `<i class="fa-solid fa-file-excel mr-2 text-emerald-600"></i>${sheetName}`;
+                
                 btn.onclick = () => switchSheet(sheetName);
+                btn.ondblclick = (e) => {
+                    e.stopPropagation();
+                    renameSheet(sheetName);
+                };
+
                 container.appendChild(btn);
             });
+        };
+
+        // 重新命名工作表（包含防呆）
+        window.renameSheet = function(oldName) {
+            let newName = prompt(`請輸入「${oldName}」的新工作表名稱:`, oldName);
+            if (!newName) return;
+            newName = sanitizeSheetName(newName);
+
+            if (newName === oldName) return;
+            if (dbWorksheets[newName]) {
+                alert("該工作表名稱已存在，請使用其他名稱！");
+                return;
+            }
+
+            collectTableData();
+            dbWorksheets[newName] = dbWorksheets[oldName];
+            delete dbWorksheets[oldName];
+            if (currentSheetName === oldName) {
+                currentSheetName = newName;
+            }
+            renderWorksheetTabs();
+            renderTable();
+            saveToFirebase(true);
+            alert(`工作表已成功重新命名為「${newName}」！`);
+        };
+
+        // 雙擊表頭標題直接修改工作表名稱
+        window.renameCurrentSheetHeader = function() {
+            renameSheet(currentSheetName);
         };
 
         window.switchSheet = function(sheetName) {
@@ -435,7 +471,7 @@
         };
 
         window.createNewSheet = function() {
-            let name = prompt("請輸入新工作表名稱 (例如：2026年10月中旬日誌):");
+            let name = prompt("請輸入新工作表名稱 (例如：10月中旬工作日誌):");
             if (!name) return;
             name = sanitizeSheetName(name);
 
@@ -479,8 +515,8 @@
         };
 
         function getDueDateBadge(dueDateStr, isClosed) {
-            if (!dueDateStr) return `<span class="text-gray-500">-</span>`;
-            if (isClosed === 'Y') return `<span class="text-gray-600">${dueDateStr} (已結案)</span>`;
+            if (!dueDateStr) return `<span class="text-slate-400">-</span>`;
+            if (isClosed === 'Y') return `<span class="text-slate-600 font-extrabold">${dueDateStr} (已結案)</span>`;
 
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -490,37 +526,37 @@
             const diffTime = due - today;
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            let badgeClass = "text-gray-700";
+            let badgeClass = "text-slate-800";
             let indicator = "";
 
             if (diffDays < 0) {
                 const overdue = Math.abs(diffDays);
                 if (overdue > 5) {
-                    badgeClass = "bg-red-100 text-red-800 font-bold border border-red-300";
-                    indicator = ` <span class="text-[10px] bg-red-600 text-white px-1.5 py-0.5 rounded-full ml-1">逾期 ${overdue} 天 (超5天)</span>`;
+                    badgeClass = "bg-red-100 text-red-900 border border-red-300";
+                    indicator = ` <span class="text-[10px] bg-red-600 text-white px-2 py-0.5 rounded-full ml-1 font-extrabold shadow-sm">逾期 ${overdue} 天 (超5天)</span>`;
                 } else if (overdue > 3) {
-                    badgeClass = "bg-orange-100 text-orange-800 font-bold border border-orange-300";
-                    indicator = ` <span class="text-[10px] bg-orange-500 text-white px-1.5 py-0.5 rounded-full ml-1">逾期 ${overdue} 天 (&gt;3天)</span>`;
+                    badgeClass = "bg-orange-100 text-orange-900 border border-orange-300";
+                    indicator = ` <span class="text-[10px] bg-orange-500 text-white px-2 py-0.5 rounded-full ml-1 font-extrabold shadow-sm">逾期 ${overdue} 天 (&gt;3天)</span>`;
                 } else {
-                    badgeClass = "bg-amber-50 text-amber-800 font-medium border border-amber-200";
-                    indicator = ` <span class="text-[10px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full ml-1">逾期 ${overdue} 天</span>`;
+                    badgeClass = "bg-amber-100 text-amber-900 border border-amber-300";
+                    indicator = ` <span class="text-[10px] bg-amber-500 text-white px-2 py-0.5 rounded-full ml-1 font-extrabold shadow-sm">逾期 ${overdue} 天</span>`;
                 }
             } else if (diffDays <= 1) {
-                badgeClass = "bg-yellow-100 text-yellow-900 font-bold border border-yellow-300";
-                indicator = ` <span class="text-[10px] bg-yellow-500 text-white px-1.5 py-0.5 rounded-full ml-1">即將到期(&lt;1天)</span>`;
+                badgeClass = "bg-yellow-100 text-yellow-900 border border-yellow-300";
+                indicator = ` <span class="text-[10px] bg-yellow-500 text-white px-2 py-0.5 rounded-full ml-1 font-extrabold shadow-sm">即將到期(&lt;1天)</span>`;
             }
 
-            return `<span class="px-2 py-0.5 rounded text-xs ${badgeClass}">${dueDateStr}${indicator}</span>`;
+            return `<span class="px-2.5 py-1 rounded-xl text-xs font-extrabold ${badgeClass}">${dueDateStr}${indicator}</span>`;
         }
 
         function getStatusColorClass(status) {
-            if (status.includes("已完成")) return "bg-green-50 text-green-700 border-green-300 font-semibold";
-            if (status.includes("進行中")) return "bg-amber-50 text-amber-700 border-amber-300 font-semibold";
-            return "bg-red-50 text-red-700 border-red-300 font-semibold";
+            if (status.includes("已完成")) return "bg-emerald-100 text-emerald-800 border-emerald-300 font-extrabold";
+            if (status.includes("進行中")) return "bg-amber-100 text-amber-800 border-amber-300 font-extrabold";
+            return "bg-red-100 text-red-800 border-red-300 font-extrabold";
         }
 
         window.renderTable = function() {
-            document.getElementById("current-sheet-title").textContent = `目前工作表: ${currentSheetName}`;
+            document.getElementById("current-sheet-title").innerHTML = `<i class="fa-solid fa-pen-to-square text-blue-600 mr-2"></i>目前工作表: <span class="text-blue-700 underline mx-1">${currentSheetName}</span> <span class="text-xs text-slate-500 font-bold">(💡 雙擊文字可編輯名稱)</span>`;
             const tbody = document.getElementById("table-body");
             tbody.innerHTML = "";
 
@@ -528,47 +564,47 @@
 
             workData.forEach((row, index) => {
                 const tr = document.createElement("tr");
-                tr.className = "hover:bg-gray-50 transition border-b border-gray-100";
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-200 font-bold";
                 const statusSelectClass = getStatusColorClass(row.status);
                 
                 tr.innerHTML = `
-                    <td class="py-3 px-4 text-center font-medium text-gray-500">${index + 1}</td>
+                    <td class="py-3.5 px-4 text-center font-extrabold text-slate-500">${index + 1}</td>
                     <td class="py-2.5 px-3">
-                        <select onchange="updateRowData(${index}, 'status', this.value); renderTable();" class="w-full border rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none ${statusSelectClass}">
+                        <select onchange="updateRowData(${index}, 'status', this.value); renderTable();" class="w-full border-2 rounded-xl px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm ${statusSelectClass}">
                             <option value="🟢 已完成" ${row.status === '🟢 已完成' ? 'selected' : ''}>🟢 已完成</option>
                             <option value="🟡 進行中" ${row.status === '🟡 進行中' ? 'selected' : ''}>🟡 進行中</option>
                             <option value="🔴 待處理" ${row.status === '🔴 待處理' ? 'selected' : ''}>🔴 待處理</option>
                         </select>
                     </td>
                     <td class="py-2.5 px-3 text-center">
-                        <select onchange="updateRowData(${index}, 'closed', this.value); renderTable();" class="w-16 text-center bg-white border border-gray-300 rounded-md px-1 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <select onchange="updateRowData(${index}, 'closed', this.value); renderTable();" class="w-16 text-center bg-white border-2 border-slate-300 rounded-xl px-1 py-1.5 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none font-extrabold shadow-sm">
                             <option value="Y" ${row.closed === 'Y' ? 'selected' : ''}>Y</option>
                             <option value="N" ${row.closed === 'N' ? 'selected' : ''}>N</option>
                         </select>
                     </td>
                     <td class="py-2.5 px-3">
-                        <input type="text" value="${row.category || ''}" onchange="updateRowData(${index}, 'category', this.value)" class="w-full bg-white border border-gray-300 rounded-md px-2.5 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <input type="text" value="${row.category || ''}" onchange="updateRowData(${index}, 'category', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                     </td>
                     <td class="py-2.5 px-3">
-                        <input type="text" value="${row.task || ''}" onchange="updateRowData(${index}, 'task', this.value)" class="w-full bg-white border border-gray-300 rounded-md px-2.5 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <input type="text" value="${row.task || ''}" onchange="updateRowData(${index}, 'task', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                     </td>
                     <td class="py-2.5 px-3">
-                        <input type="text" value="${row.assignee || ''}" onchange="updateRowData(${index}, 'assignee', this.value)" class="w-full bg-white border border-gray-300 rounded-md px-2.5 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <input type="text" value="${row.assignee || ''}" onchange="updateRowData(${index}, 'assignee', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                     </td>
                     <td class="py-2.5 px-3">
-                        <input type="date" value="${row.startDate || ''}" onchange="updateRowData(${index}, 'startDate', this.value)" class="w-full bg-white border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <input type="date" value="${row.startDate || ''}" onchange="updateRowData(${index}, 'startDate', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                     </td>
                     <td class="py-2.5 px-3">
                         <div class="flex items-center space-x-2">
-                            <input type="date" value="${row.dueDate || ''}" onchange="updateRowData(${index}, 'dueDate', this.value); renderTable();" class="w-full bg-white border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                            <input type="date" value="${row.dueDate || ''}" onchange="updateRowData(${index}, 'dueDate', this.value); renderTable();" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-1.5 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                         </div>
-                        <div class="mt-1 text-xs">${getDueDateBadge(row.dueDate, row.closed)}</div>
+                        <div class="mt-1">${getDueDateBadge(row.dueDate, row.closed)}</div>
                     </td>
                     <td class="py-2.5 px-3">
-                        <input type="text" value="${row.remarks || ''}" onchange="updateRowData(${index}, 'remarks', this.value)" class="w-full bg-white border border-gray-300 rounded-md px-2.5 py-1 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none">
+                        <input type="text" value="${row.remarks || ''}" onchange="updateRowData(${index}, 'remarks', this.value)" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-1.5 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                     </td>
                     <td class="py-2.5 px-4 text-center">
-                        <button onclick="deleteRow(${index})" class="text-red-500 hover:text-red-700 p-1.5 transition rounded-lg hover:bg-red-50" title="刪除此列">
+                        <button onclick="deleteRow(${index})" class="text-red-600 hover:text-red-800 p-2 transition rounded-xl hover:bg-red-50 font-extrabold shadow-sm" title="刪除此列">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
                     </td>
@@ -637,14 +673,14 @@
             if (viewName === 'table') {
                 tableSection.classList.remove("hidden");
                 analysisSection.classList.add("hidden");
-                tableBtn.className = "px-4 py-2 rounded-lg font-medium text-sm bg-blue-600 text-white shadow-sm transition";
-                analysisBtn.className = "px-4 py-2 rounded-lg font-medium text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 transition";
+                tableBtn.className = "px-4 py-2.5 rounded-xl font-extrabold text-sm bg-blue-700 text-white shadow-md shadow-blue-600/30 transition";
+                analysisBtn.className = "px-4 py-2.5 rounded-xl font-extrabold text-sm bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
                 toolbar.style.display = "flex";
             } else {
                 tableSection.classList.add("hidden");
                 analysisSection.classList.remove("hidden");
-                analysisBtn.className = "px-4 py-2 rounded-lg font-medium text-sm bg-blue-600 text-white shadow-sm transition";
-                tableBtn.className = "px-4 py-2 rounded-lg font-medium text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 transition";
+                analysisBtn.className = "px-4 py-2.5 rounded-xl font-extrabold text-sm bg-blue-700 text-white shadow-md shadow-blue-600/30 transition";
+                tableBtn.className = "px-4 py-2.5 rounded-xl font-extrabold text-sm bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
                 toolbar.style.display = "none";
                 collectTableData();
                 updateAnalysisCharts();
@@ -671,7 +707,6 @@
             XLSX.writeFile(workbook, `${currentSheetName}_工作日誌報表.xlsx`);
         };
 
-        // 強化防呆：Excel 匯入
         window.importFromExcel = function(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -772,8 +807,8 @@
                     datasets: [{
                         label: '工作項目數量',
                         data: Object.values(projectCounts),
-                        backgroundColor: '#3B82F6',
-                        borderRadius: 6
+                        backgroundColor: '#1D4ED8',
+                        borderRadius: 8
                     }]
                 },
                 options: {
