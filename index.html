@@ -556,8 +556,8 @@
         };
 
         function getDueDateBadge(dueDateStr, closedVal) {
-            if (!dueDateStr) return `<div class="h-5"></div>`;
-            if (closedVal === 'O') return `<div class="text-slate-500 text-[11px] font-bold mb-1">已結案</div>`;
+            if (!dueDateStr) return `<div class="h-4"></div>`;
+            if (closedVal === 'O') return `<div class="text-slate-500 text-[11px] font-bold h-4 flex items-center">已結案</div>`;
 
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -569,14 +569,14 @@
             if (diffDays < 0) {
                 const overdue = Math.abs(diffDays);
                 if (overdue > 5) {
-                    return `<div class="mb-1"><span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-red-600 text-white shadow-sm">逾期 (${overdue}天)</span></div>`;
+                    return `<div class="h-4 flex items-center"><span class="px-1.5 py-0.2 rounded text-[10px] font-extrabold bg-red-600 text-white shadow-sm">逾期 (${overdue}天)</span></div>`;
                 } else {
-                    return `<div class="mb-1"><span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-amber-500 text-white shadow-sm">逾期 (${overdue}天)</span></div>`;
+                    return `<div class="h-4 flex items-center"><span class="px-1.5 py-0.2 rounded text-[10px] font-extrabold bg-amber-500 text-white shadow-sm">逾期 (${overdue}天)</span></div>`;
                 }
             } else if (diffDays <= 1) {
-                return `<div class="mb-1"><span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-yellow-500 text-white shadow-sm">即將到期</span></div>`;
+                return `<div class="h-4 flex items-center"><span class="px-1.5 py-0.2 rounded text-[10px] font-extrabold bg-yellow-500 text-white shadow-sm">即將到期</span></div>`;
             }
-            return `<div class="h-5"></div>`;
+            return `<div class="h-4"></div>`;
         }
 
         function getStatusColorClass(status) {
@@ -667,46 +667,46 @@
                 tr.innerHTML = `
                     <td class="py-3 px-3 text-center font-extrabold text-slate-500 align-middle">${index + 1}</td>
                     <td class="py-3 px-3 align-middle">
-                        <div data-field="status" class="w-full border-2 rounded-xl px-2 py-2 text-xs text-center shadow-sm ${statusClass}">
+                        <div data-field="status" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs text-center shadow-sm h-10 flex items-center justify-center ${statusClass}">
                             ${row.status || '🟡 進行中'}
                         </div>
                     </td>
                     <td class="py-3 px-2 text-center align-middle">
-                        <select data-field="closed" class="w-16 text-center bg-white border-2 border-slate-300 rounded-xl px-1 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-extrabold shadow-sm">
+                        <select data-field="closed" class="w-16 text-center bg-white border-2 border-slate-300 rounded-xl px-1 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-extrabold shadow-sm h-10">
                             <option value="O" ${row.closed === 'O' ? 'selected' : ''}>O</option>
                             <option value="△" ${row.closed === '△' ? 'selected' : ''}>△</option>
                             <option value="X" ${row.closed === 'X' ? 'selected' : ''}>X</option>
                         </select>
                     </td>
                     <td class="py-3 px-3 align-middle">
-                        <select data-field="priority" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm ${priorityClass}">
+                        <select data-field="priority" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm h-10 ${priorityClass}">
                             <option value="🔥 緊急重要" ${row.priority === '🔥 緊急重要' ? 'selected' : ''}>🔥 緊急重要</option>
                             <option value="⚡ 普通" ${row.priority === '⚡ 普通' ? 'selected' : ''}>⚡ 普通</option>
                             <option value="☕ 長期追蹤" ${row.priority === '☕ 長期追蹤' ? 'selected' : ''}>☕ 長期追蹤</option>
                         </select>
                     </td>
                     <td class="py-3 px-3 align-middle">
-                        <select data-field="category" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm ${categoryClass}">
+                        <select data-field="category" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm h-10 ${categoryClass}">
                             ${categoryOptionsHtml}
                         </select>
                     </td>
                     <td class="py-3 px-3 align-middle">
-                        <input type="text" data-field="task" value="${row.task || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="輸入工作項目...">
+                        <input type="text" data-field="task" value="${row.task || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm h-10" placeholder="輸入工作項目...">
                     </td>
                     <td class="py-3 px-3 align-middle">
-                        <select data-field="assignee" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                        <select data-field="assignee" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm h-10">
                             ${assigneeOptionsHtml}
                         </select>
                     </td>
                     <td class="py-3 px-3 align-middle">
-                        <input type="date" data-field="startDate" value="${row.startDate || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                        <input type="date" data-field="startDate" value="${row.startDate || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm h-10">
                     </td>
                     <td class="py-3 px-3 align-middle">
                         ${getDueDateBadge(row.dueDate, row.closed)}
-                        <input type="date" data-field="dueDate" value="${row.dueDate || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                        <input type="date" data-field="dueDate" value="${row.dueDate || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm h-10 mt-1">
                     </td>
                     <td class="py-3 px-3 align-middle">
-                        <input type="text" data-field="remarks" value="${row.remarks || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="備註...">
+                        <input type="text" data-field="remarks" value="${row.remarks || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm h-10" placeholder="備註...">
                     </td>
                     <td class="py-3 px-3 text-center align-middle">
                         <div class="flex items-center justify-center space-x-1">
