@@ -157,12 +157,12 @@
                                 <th class="py-4 px-3 w-36 cursor-pointer hover:text-blue-700" onclick="sortByPriority()" title="點擊依優先權排序">
                                     優先權 <i class="fa-solid fa-sort ml-1"></i>
                                 </th>
-                                <th class="py-4 px-3 w-48">專案 / 類別</th>
-                                <th class="py-4 px-3 min-w-[280px]">工作項目 / 內容描述</th>
-                                <th class="py-4 px-3 w-36">負責人</th>
+                                <th class="py-4 px-3 w-40">專案 / 類別</th>
+                                <th class="py-4 px-3 min-w-[220px]">工作項目 / 內容描述</th>
+                                <th class="py-4 px-3 w-44">負責人</th>
                                 <th class="py-4 px-3 w-36">建立日期</th>
                                 <th class="py-4 px-3 w-48">到期日 (智慧提示)</th>
-                                <th class="py-4 px-3 min-w-[260px]">備註 / 連結</th>
+                                <th class="py-4 px-3 min-w-[220px]">備註 / 連結</th>
                                 <th class="py-4 px-3 text-center w-28">操作</th>
                             </tr>
                         </thead>
@@ -278,11 +278,11 @@
             "2026年10月上旬日誌": [
                 {
                     status: "🟢 已完成",
-                    closed: "Y",
+                    closed: "O",
                     priority: "⚡ 普通",
                     category: "設備改善",
                     task: "進行無塵室清洗自動線設備點檢",
-                    assignee: "劉金勳",
+                    assignee: "本人",
                     startDate: "2026-10-10",
                     dueDate: "2026-10-12",
                     remarks: "已確認運作正常"
@@ -351,8 +351,12 @@
                         if (Array.isArray(dbWorksheets[sheet])) {
                             dbWorksheets[sheet].forEach(row => {
                                 if (!row.priority) row.priority = "⚡ 普通";
-                                if (!row.status) row.status = "🟡 進行中";
-                                if (!row.closed) row.closed = "N";
+                                if (!row.closed) row.closed = "O";
+                                // 依據結案代號自動帶出燈號
+                                if (row.closed === "O") row.status = "🟢 已完成";
+                                else if (row.closed === "△") row.status = "🟡 進行中";
+                                else if (row.closed === "X") row.status = "🔴 待處理";
+                                else if (!row.status) row.status = "🟡 進行中";
                             });
                         }
                     });
@@ -381,12 +385,12 @@
                 const cleanKey = sanitizeSheetName(key);
                 if (cleanKey && cleanKey.trim() !== "") {
                     cleanWorksheets[cleanKey] = (dbWorksheets[key] || []).map(row => ({
-                        status: row.status || "🟡 進行中",
-                        closed: row.closed || "N",
+                        closed: row.closed || "O",
+                        status: row.status || "🟢 已完成",
                         priority: row.priority || "⚡ 普通",
                         category: row.category || "",
                         task: row.task || "",
-                        assignee: row.assignee || "",
+                        assignee: row.assignee || "本人",
                         startDate: row.startDate || "",
                         dueDate: row.dueDate || "",
                         remarks: row.remarks || ""
@@ -522,12 +526,12 @@
             collectTableData();
             const today = new Date().toISOString().split('T')[0];
             dbWorksheets[name] = [{
+                closed: "△",
                 status: "🟡 進行中",
-                closed: "N",
                 priority: "⚡ 普通",
                 category: "新專案",
                 task: "請輸入工作項目描述",
-                assignee: "劉金勳",
+                assignee: "本人",
                 startDate: today,
                 dueDate: today,
                 remarks: ""
@@ -552,9 +556,9 @@
             }
         };
 
-        function getDueDateBadge(dueDateStr, isClosed) {
+        function getDueDateBadge(dueDateStr, closedVal) {
             if (!dueDateStr) return `<span class="text-slate-400">-</span>`;
-            if (isClosed === 'Y') return `<span class="text-slate-600 font-extrabold whitespace-nowrap">${dueDateStr} (已結案)</span>`;
+            if (closedVal === 'O') return `<span class="text-slate-600 font-extrabold whitespace-nowrap">${dueDateStr} (已結案)</span>`;
 
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -629,9 +633,9 @@
             const rawData = dbWorksheets[currentSheetName] || [];
 
             rawData.forEach((row, index) => {
-                if (currentFilterMode === 'unclosed' && row.closed === 'Y') return;
+                if (currentFilterMode === 'unclosed' && row.closed === 'O') return;
                 if (currentFilterMode === 'urgent' && !(row.priority || "").includes('緊急')) return;
-                if (currentFilterMode === 'my' && !(row.assignee || "").includes('劉金勳')) return;
+                if (currentFilterMode === 'my' && !(row.assignee || "").includes('本人')) return;
 
                 if (currentSearchQuery) {
                     const matchStr = `${row.category || ''} ${row.task || ''} ${row.assignee || ''} ${row.remarks || ''}`.toLowerCase();
@@ -646,16 +650,15 @@
                 tr.innerHTML = `
                     <td class="py-3.5 px-3 text-center font-extrabold text-slate-500">${index + 1}</td>
                     <td class="py-3 px-3">
-                        <select data-field="status" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm ${statusClass}">
-                            <option value="🟢 已完成" ${row.status === '🟢 已完成' ? 'selected' : ''}>🟢 已完成</option>
-                            <option value="🟡 進行中" ${row.status === '🟡 進行中' ? 'selected' : ''}>🟡 進行中</option>
-                            <option value="🔴 待處理" ${row.status === '🔴 待處理' ? 'selected' : ''}>🔴 待處理</option>
-                        </select>
+                        <div data-field="status" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs text-center shadow-sm ${statusClass}">
+                            ${row.status || '🟡 進行中'}
+                        </div>
                     </td>
                     <td class="py-3 px-2 text-center">
-                        <select data-field="closed" class="w-14 text-center bg-white border-2 border-slate-300 rounded-xl px-1 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-extrabold shadow-sm">
-                            <option value="Y" ${row.closed === 'Y' ? 'selected' : ''}>Y</option>
-                            <option value="N" ${row.closed === 'N' ? 'selected' : ''}>N</option>
+                        <select data-field="closed" class="w-16 text-center bg-white border-2 border-slate-300 rounded-xl px-1 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-extrabold shadow-sm">
+                            <option value="O" ${row.closed === 'O' ? 'selected' : ''}>O</option>
+                            <option value="△" ${row.closed === '△' ? 'selected' : ''}>△</option>
+                            <option value="X" ${row.closed === 'X' ? 'selected' : ''}>X</option>
                         </select>
                     </td>
                     <td class="py-3 px-3">
@@ -672,7 +675,15 @@
                         <input type="text" data-field="task" value="${row.task || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="輸入任務...">
                     </td>
                     <td class="py-3 px-3">
-                        <input type="text" data-field="assignee" value="${row.assignee || ''}" placeholder="負責人" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                        <select data-field="assignee" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                            <option value="本人" ${row.assignee === '本人' ? 'selected' : ''}>本人</option>
+                            <option value="製造" ${row.assignee === '製造' ? 'selected' : ''}>製造</option>
+                            <option value="生管" ${row.assignee === '生管' ? 'selected' : ''}>生管</option>
+                            <option value="採購" ${row.assignee === '採購' ? 'selected' : ''}>採購</option>
+                            <option value="工程" ${row.assignee === '工程' ? 'selected' : ''}>工程</option>
+                            <option value="品保" ${row.assignee === '品保' ? 'selected' : ''}>品保</option>
+                            <option value="業務" ${row.assignee === '業務' ? 'selected' : ''}>業務</option>
+                        </select>
                     </td>
                     <td class="py-3 px-3">
                         <input type="date" data-field="startDate" value="${row.startDate || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
@@ -691,16 +702,20 @@
                     </td>
                 `;
                 
-                // 動態綁定輸入監聽器
                 tr.querySelectorAll("select, input").forEach(el => {
                     el.addEventListener("input", () => {
                         updateRowData(index, el.getAttribute("data-field"), el.value);
                     });
                     el.addEventListener("change", () => {
-                        updateRowData(index, el.getAttribute("data-field"), el.value);
-                        if(el.getAttribute("data-field") === 'status' || el.getAttribute("data-field") === 'closed' || el.getAttribute("data-field") === 'dueDate') {
-                            renderTable();
+                        const field = el.getAttribute("data-field");
+                        let val = el.value;
+                        if(field === 'closed') {
+                            if(val === 'O') row.status = "🟢 已完成";
+                            else if(val === '△') row.status = "🟡 進行中";
+                            else if(val === 'X') row.status = "🔴 待處理";
                         }
+                        updateRowData(index, field, val);
+                        renderTable();
                     });
                 });
 
@@ -716,9 +731,15 @@
                     const el = tr.querySelector(`[data-field="${field}"]`);
                     return el ? el.value : "";
                 };
+                const closedVal = getVal('closed');
+                let statusVal = "🟡 進行中";
+                if(closedVal === 'O') statusVal = "🟢 已完成";
+                else if(closedVal === '△') statusVal = "🟡 進行中";
+                else if(closedVal === 'X') statusVal = "🔴 待處理";
+
                 workData.push({
-                    status: getVal('status'),
-                    closed: getVal('closed'),
+                    status: statusVal,
+                    closed: closedVal,
                     priority: getVal('priority'),
                     category: getVal('category'),
                     task: getVal('task'),
@@ -735,6 +756,11 @@
             collectTableData();
             if(dbWorksheets[currentSheetName][index]) {
                 dbWorksheets[currentSheetName][index][field] = value;
+                if(field === 'closed') {
+                    if(value === 'O') dbWorksheets[currentSheetName][index].status = "🟢 已完成";
+                    else if(value === '△') dbWorksheets[currentSheetName][index].status = "🟡 進行中";
+                    else if(value === 'X') dbWorksheets[currentSheetName][index].status = "🔴 待處理";
+                }
                 saveToFirebase(true);
             }
         };
@@ -744,11 +770,11 @@
             const today = new Date().toISOString().split('T')[0];
             dbWorksheets[currentSheetName].push({
                 status: "🟡 進行中",
-                closed: "N",
+                closed: "△",
                 priority: "⚡ 普通",
                 category: "新專案",
                 task: "請輸入工作項目描述",
-                assignee: "劉金勳",
+                assignee: "本人",
                 startDate: today,
                 dueDate: today,
                 remarks: ""
@@ -805,7 +831,7 @@
             }
 
             workData.forEach((item, idx) => {
-                const progressColor = item.closed === 'Y' ? 'bg-emerald-500' : ((item.priority || "").includes('緊急') ? 'bg-red-500' : 'bg-blue-600');
+                const progressColor = item.closed === 'O' ? 'bg-emerald-500' : ((item.priority || "").includes('緊急') ? 'bg-red-500' : 'bg-blue-600');
                 
                 const rowDiv = document.createElement("div");
                 rowDiv.className = "bg-slate-50 p-3 rounded-xl border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-2";
@@ -819,7 +845,7 @@
                     <div class="w-full md:w-1/2 flex items-center space-x-3 text-xs font-bold text-slate-600">
                         <span>${item.startDate || '未定'}</span>
                         <div class="flex-1 bg-slate-200 h-3 rounded-full overflow-hidden relative shadow-inner">
-                            <div class="${progressColor} h-full rounded-full transition-all duration-500" style="width: ${item.closed === 'Y' ? '100%' : '65%'}"></div>
+                            <div class="${progressColor} h-full rounded-full transition-all duration-500" style="width: ${item.closed === 'O' ? '100%' : '65%'}"></div>
                         </div>
                         <span>${item.dueDate || '未定'}</span>
                     </div>
@@ -903,17 +929,24 @@
 
                     if (json.length > 0) {
                         currentSheetName = sheetName;
-                        dbWorksheets[currentSheetName] = json.map(row => ({
-                            status: row["狀態 (Status)"] || "🟡 進行中",
-                            closed: row["結案 (Y/N)"] || "N",
-                            priority: row["優先權 (Priority)"] || "⚡ 普通",
-                            category: row["專案 / 類別 (Project/Category)"] || row["專案 / 類別"] || "",
-                            task: row["工作項目 / 內容描述 (Task Description)"] || row["工作項目 / 內容描述"] || "",
-                            assignee: row["負責人 (Assignee)"] || row["負責人"] || "",
-                            startDate: row["建立日期 (Start Date)"] || row["建立日期"] || "",
-                            dueDate: row["到期日 (Due Date)"] || row["到期日"] || "",
-                            remarks: row["備註 / 後續追蹤 (Remarks/Notes)"] || row["備註 / 後續追蹤"] || ""
-                        }));
+                        dbWorksheets[currentSheetName] = json.map(row => {
+                            let cVal = row["結案 (Y/N)"] || row["結案"] || "O";
+                            let sVal = "🟢 已完成";
+                            if(cVal === '△') sVal = "🟡 進行中";
+                            else if(cVal === 'X') sVal = "🔴 待處理";
+                            
+                            return {
+                                status: sVal,
+                                closed: cVal,
+                                priority: row["優先權 (Priority)"] || "⚡ 普通",
+                                category: row["專案 / 類別 (Project/Category)"] || row["專案 / 類別"] || "",
+                                task: row["工作項目 / 內容描述 (Task Description)"] || row["工作項目 / 內容描述"] || "",
+                                assignee: row["負責人 (Assignee)"] || row["負責人"] || "本人",
+                                startDate: row["建立日期 (Start Date)"] || row["建立日期"] || "",
+                                dueDate: row["到期日 (Due Date)"] || row["到期日"] || "",
+                                remarks: row["備註 / 後續追蹤 (Remarks/Notes)"] || row["備註 / 後續追蹤"] || ""
+                            };
+                        });
                         renderWorksheetTabs();
                         renderTable();
                         saveToFirebase(true); 
@@ -932,7 +965,7 @@
         function updateAnalysisCharts() {
             const workData = dbWorksheets[currentSheetName] || [];
             const total = workData.length;
-            const completed = workData.filter(item => item.closed === 'Y' || (item.status || "").includes('已完成')).length;
+            const completed = workData.filter(item => item.closed === 'O' || (item.status || "").includes('已完成')).length;
             const ongoing = total - completed;
             const rate = total > 0 ? Math.round((completed / total) * 100) : 0;
 
