@@ -108,7 +108,7 @@
             <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
                 <div class="relative flex items-center">
                     <i class="fa-solid fa-search absolute left-3.5 text-slate-400"></i>
-                    <input type="text" id="global-search" oninput="handleSearchInput(this.value)" placeholder="搜尋任務內容、專案、負責人..." class="pl-10 pr-4 py-2 border-2 border-slate-200 rounded-xl text-xs font-bold focus:ring-2 focus:ring-blue-600 focus:outline-none w-64 shadow-inner">
+                    <input type="text" id="global-search" oninput="handleSearchInput(this.value)" placeholder="搜尋任務內容、類別、負責人..." class="pl-10 pr-4 py-2 border-2 border-slate-200 rounded-xl text-xs font-bold focus:ring-2 focus:ring-blue-600 focus:outline-none w-64 shadow-inner">
                 </div>
                 <div class="flex items-center space-x-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200">
                     <button onclick="setFilter('all')" id="filter-all-btn" class="px-3 py-1.5 rounded-lg text-xs font-extrabold bg-blue-700 text-white transition shadow-sm">全部</button>
@@ -157,12 +157,12 @@
                                 <th class="py-3 px-3 w-36 whitespace-nowrap cursor-pointer hover:text-blue-700" onclick="sortByPriority()" title="點擊依優先權排序">
                                     優先權 <i class="fa-solid fa-sort ml-1"></i>
                                 </th>
-                                <th class="py-3 px-3 w-40 whitespace-nowrap">專案 / 類別</th>
-                                <th class="py-3 px-3 min-w-[180px] whitespace-nowrap">工作項目 / 內容描述</th>
+                                <th class="py-3 px-3 w-36 whitespace-nowrap">類別</th>
+                                <th class="py-3 px-3 min-w-[160px] whitespace-nowrap">工作項目</th>
                                 <th class="py-3 px-3 w-48 min-w-[130px] whitespace-nowrap">負責人</th>
                                 <th class="py-3 px-3 w-36 whitespace-nowrap">建立日期</th>
-                                <th class="py-3 px-3 w-48 whitespace-nowrap">到期日 (智慧提示)</th>
-                                <th class="py-3 px-3 min-w-[200px] whitespace-nowrap">備註 / 連結</th>
+                                <th class="py-3 px-3 w-48 whitespace-nowrap">到期日</th>
+                                <th class="py-3 px-3 min-w-[180px] whitespace-nowrap">備註</th>
                                 <th class="py-3 px-3 text-center w-28 whitespace-nowrap">操作</th>
                             </tr>
                         </thead>
@@ -199,7 +199,7 @@
                     </div>
                     <div class="bg-white p-5 rounded-2xl shadow-md border border-slate-200 flex items-center justify-between">
                         <div>
-                            <p class="text-xs text-slate-500 font-extrabold uppercase">已結案 (Y)</p>
+                            <p class="text-xs text-slate-500 font-extrabold uppercase">已結案 (O)</p>
                             <h3 id="stat-completed" class="text-3xl font-extrabold text-emerald-600 mt-1">0</h3>
                         </div>
                         <div class="bg-emerald-100 text-emerald-700 p-3.5 rounded-2xl text-xl shadow-inner"><i class="fa-solid fa-circle-check"></i></div>
@@ -233,8 +233,8 @@
 
                     <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200 flex flex-col justify-between">
                         <div class="flex justify-between items-center mb-4">
-                            <h3 class="font-extrabold text-slate-900 text-base">專案 / 類別分佈</h3>
-                            <button onclick="exportChartPNG('projectChart', '專案類別分佈圖.png')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center shadow-sm">
+                            <h3 class="font-extrabold text-slate-900 text-base">類別分佈</h3>
+                            <button onclick="exportChartPNG('projectChart', '類別分佈圖.png')" class="bg-slate-100 hover:bg-slate-200 text-slate-800 px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center shadow-sm">
                                 <i class="fa-solid fa-download mr-1.5"></i>匯出 PNG
                             </button>
                         </div>
@@ -280,7 +280,7 @@
                     status: "🟢 已完成",
                     closed: "O",
                     priority: "⚡ 普通",
-                    category: "設備改善",
+                    category: "改善",
                     task: "進行無塵室清洗自動線設備點檢",
                     assignee: "本人",
                     startDate: "2026-10-10",
@@ -387,7 +387,7 @@
                         closed: row.closed || "O",
                         status: row.status || "🟢 已完成",
                         priority: row.priority || "⚡ 普通",
-                        category: row.category || "",
+                        category: row.category || "改善",
                         task: row.task || "",
                         assignee: row.assignee || "本人",
                         startDate: row.startDate || "",
@@ -528,7 +528,7 @@
                 closed: "△",
                 status: "🟡 進行中",
                 priority: "⚡ 普通",
-                category: "新專案",
+                category: "改善",
                 task: "請輸入工作項目描述",
                 assignee: "本人",
                 startDate: today,
@@ -556,8 +556,8 @@
         };
 
         function getDueDateBadge(dueDateStr, closedVal) {
-            if (!dueDateStr) return `<span class="text-slate-400 text-xs">-</span>`;
-            if (closedVal === 'O') return `<span class="text-slate-500 text-xs font-bold whitespace-nowrap">已結案</span>`;
+            if (!dueDateStr) return `<div class="h-5"></div>`;
+            if (closedVal === 'O') return `<div class="text-slate-500 text-[11px] font-bold mb-1">已結案</div>`;
 
             const today = new Date();
             today.setHours(0, 0, 0, 0);
@@ -569,14 +569,14 @@
             if (diffDays < 0) {
                 const overdue = Math.abs(diffDays);
                 if (overdue > 5) {
-                    return `<span class="px-2 py-0.5 rounded-md text-xs font-extrabold bg-red-600 text-white shadow-sm">逾期 (${overdue}天)</span>`;
+                    return `<div class="mb-1"><span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-red-600 text-white shadow-sm">逾期 (${overdue}天)</span></div>`;
                 } else {
-                    return `<span class="px-2 py-0.5 rounded-md text-xs font-extrabold bg-amber-500 text-white shadow-sm">逾期 (${overdue}天)</span>`;
+                    return `<div class="mb-1"><span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-amber-500 text-white shadow-sm">逾期 (${overdue}天)</span></div>`;
                 }
             } else if (diffDays <= 1) {
-                return `<span class="px-2 py-0.5 rounded-md text-xs font-extrabold bg-yellow-500 text-white shadow-sm">即將到期</span>`;
+                return `<div class="mb-1"><span class="px-1.5 py-0.5 rounded text-[10px] font-extrabold bg-yellow-500 text-white shadow-sm">即將到期</span></div>`;
             }
-            return `<span class="text-slate-400 text-xs">進行中</span>`;
+            return `<div class="h-5"></div>`;
         }
 
         function getStatusColorClass(status) {
@@ -591,6 +591,21 @@
             if (p.includes("緊急")) return "bg-red-100 text-red-900 border-red-300 font-extrabold";
             if (p.includes("普通")) return "bg-blue-50 text-blue-800 border-blue-200 font-bold";
             return "bg-slate-100 text-slate-700 border-slate-300 font-bold";
+        }
+
+        function getCategoryColorClass(category) {
+            switch (category) {
+                case '客戶': return "bg-sky-100 text-sky-900 border-sky-300 font-extrabold";
+                case '廠區': return "bg-slate-200 text-slate-900 border-slate-400 font-extrabold";
+                case '專案': return "bg-indigo-100 text-indigo-900 border-indigo-300 font-extrabold";
+                case '改善': return "bg-emerald-100 text-emerald-900 border-emerald-300 font-extrabold";
+                case '委外': return "bg-amber-100 text-amber-900 border-amber-300 font-extrabold";
+                case '產能': return "bg-orange-100 text-orange-900 border-orange-300 font-extrabold";
+                case '良率': return "bg-teal-100 text-teal-900 border-teal-300 font-extrabold";
+                case '效率': return "bg-purple-100 text-purple-900 border-purple-300 font-extrabold";
+                case '稼動': return "bg-cyan-100 text-cyan-900 border-cyan-300 font-extrabold";
+                default: return "bg-white text-slate-900 border-slate-300 font-bold";
+            }
         }
 
         window.handleSearchInput = function(query) {
@@ -638,62 +653,67 @@
                 }
 
                 const tr = document.createElement("tr");
-                tr.className = "hover:bg-slate-50 transition border-b border-slate-200 font-bold";
+                tr.className = "hover:bg-slate-50 transition border-b border-slate-200 font-bold align-middle";
                 const statusClass = getStatusColorClass(row.status);
                 const priorityClass = getPriorityColorClass(row.priority);
+                const categoryClass = getCategoryColorClass(row.category || '改善');
+
+                const categoryOptions = ["客戶", "廠區", "專案", "改善", "委外", "產能", "良率", "效率", "稼動"];
+                let categoryOptionsHtml = categoryOptions.map(opt => `<option value="${opt}" ${row.category === opt ? 'selected' : ''}>${opt}</option>`).join('');
+
+                const assigneeOptions = ["本人", "製造", "生管", "採購", "工程", "品保", "業務"];
+                let assigneeOptionsHtml = assigneeOptions.map(opt => `<option value="${opt}" ${row.assignee === opt ? 'selected' : ''}>${opt}</option>`).join('');
 
                 tr.innerHTML = `
-                    <td class="py-3.5 px-3 text-center font-extrabold text-slate-500">${index + 1}</td>
-                    <td class="py-3 px-3">
+                    <td class="py-3 px-3 text-center font-extrabold text-slate-500 align-middle">${index + 1}</td>
+                    <td class="py-3 px-3 align-middle">
                         <div data-field="status" class="w-full border-2 rounded-xl px-2 py-2 text-xs text-center shadow-sm ${statusClass}">
                             ${row.status || '🟡 進行中'}
                         </div>
                     </td>
-                    <td class="py-3 px-2 text-center">
+                    <td class="py-3 px-2 text-center align-middle">
                         <select data-field="closed" class="w-16 text-center bg-white border-2 border-slate-300 rounded-xl px-1 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-extrabold shadow-sm">
                             <option value="O" ${row.closed === 'O' ? 'selected' : ''}>O</option>
                             <option value="△" ${row.closed === '△' ? 'selected' : ''}>△</option>
                             <option value="X" ${row.closed === 'X' ? 'selected' : ''}>X</option>
                         </select>
                     </td>
-                    <td class="py-3 px-3">
+                    <td class="py-3 px-3 align-middle">
                         <select data-field="priority" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm ${priorityClass}">
                             <option value="🔥 緊急重要" ${row.priority === '🔥 緊急重要' ? 'selected' : ''}>🔥 緊急重要</option>
                             <option value="⚡ 普通" ${row.priority === '⚡ 普通' ? 'selected' : ''}>⚡ 普通</option>
                             <option value="☕ 長期追蹤" ${row.priority === '☕ 長期追蹤' ? 'selected' : ''}>☕ 長期追蹤</option>
                         </select>
                     </td>
-                    <td class="py-3 px-3">
-                        <input type="text" data-field="category" value="${row.category || ''}" placeholder="專案/類別" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
-                    </td>
-                    <td class="py-3 px-3">
-                        <input type="text" data-field="task" value="${row.task || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="輸入任務...">
-                    </td>
-                    <td class="py-3 px-3">
-                        <select data-field="assignee" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
-                            <option value="本人" ${row.assignee === '本人' ? 'selected' : ''}>本人</option>
-                            <option value="製造" ${row.assignee === '製造' ? 'selected' : ''}>製造</option>
-                            <option value="生管" ${row.assignee === '生管' ? 'selected' : ''}>生管</option>
-                            <option value="採購" ${row.assignee === '採購' ? 'selected' : ''}>採購</option>
-                            <option value="工程" ${row.assignee === '工程' ? 'selected' : ''}>工程</option>
-                            <option value="品保" ${row.assignee === '品保' ? 'selected' : ''}>品保</option>
-                            <option value="業務" ${row.assignee === '業務' ? 'selected' : ''}>業務</option>
+                    <td class="py-3 px-3 align-middle">
+                        <select data-field="category" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none shadow-sm ${categoryClass}">
+                            ${categoryOptionsHtml}
                         </select>
                     </td>
-                    <td class="py-3 px-3">
+                    <td class="py-3 px-3 align-middle">
+                        <input type="text" data-field="task" value="${row.task || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="輸入工作項目...">
+                    </td>
+                    <td class="py-3 px-3 align-middle">
+                        <select data-field="assignee" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2.5 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
+                            ${assigneeOptionsHtml}
+                        </select>
+                    </td>
+                    <td class="py-3 px-3 align-middle">
                         <input type="date" data-field="startDate" value="${row.startDate || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
                     </td>
-                    <td class="py-3 px-3">
+                    <td class="py-3 px-3 align-middle">
+                        ${getDueDateBadge(row.dueDate, row.closed)}
                         <input type="date" data-field="dueDate" value="${row.dueDate || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-2 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm">
-                        <div class="mt-1">${getDueDateBadge(row.dueDate, row.closed)}</div>
                     </td>
-                    <td class="py-3 px-3">
+                    <td class="py-3 px-3 align-middle">
                         <input type="text" data-field="remarks" value="${row.remarks || ''}" class="w-full bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs focus:ring-2 focus:ring-blue-600 focus:outline-none font-bold shadow-sm" placeholder="備註...">
                     </td>
-                    <td class="py-3 px-3 text-center flex items-center justify-center space-x-1">
-                        <button onclick="duplicateRow(${index})" class="text-blue-600 hover:text-blue-800 p-2 transition rounded-lg hover:bg-blue-50 shadow-sm" title="複製此列"><i class="fa-solid fa-copy"></i></button>
-                        <button onclick="copyToAnotherSheet(${index})" class="text-indigo-600 hover:text-indigo-800 p-2 transition rounded-lg hover:bg-indigo-50 shadow-sm" title="跨表複製"><i class="fa-solid fa-share-from-square"></i></button>
-                        <button onclick="deleteRow(${index})" class="text-red-600 hover:text-red-800 p-2 transition rounded-lg hover:bg-red-50 shadow-sm" title="刪除此列"><i class="fa-solid fa-trash-can"></i></button>
+                    <td class="py-3 px-3 text-center align-middle">
+                        <div class="flex items-center justify-center space-x-1">
+                            <button onclick="duplicateRow(${index})" class="text-blue-600 hover:text-blue-800 p-2 transition rounded-lg hover:bg-blue-50 shadow-sm" title="複製此列"><i class="fa-solid fa-copy"></i></button>
+                            <button onclick="copyToAnotherSheet(${index})" class="text-indigo-600 hover:text-indigo-800 p-2 transition rounded-lg hover:bg-indigo-50 shadow-sm" title="跨表複製"><i class="fa-solid fa-share-from-square"></i></button>
+                            <button onclick="deleteRow(${index})" class="text-red-600 hover:text-red-800 p-2 transition rounded-lg hover:bg-red-50 shadow-sm" title="刪除此列"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
                     </td>
                 `;
                 
@@ -767,7 +787,7 @@
                 status: "🟡 進行中",
                 closed: "△",
                 priority: "⚡ 普通",
-                category: "新專案",
+                category: "改善",
                 task: "請輸入工作項目描述",
                 assignee: "本人",
                 startDate: today,
@@ -890,14 +910,14 @@
             const workData = dbWorksheets[currentSheetName] || [];
             const exportData = workData.map(item => ({
                 "狀態 (Status)": item.status,
-                "結案 (Y/N)": item.closed,
-                "優先權 (Priority)": item.priority,
-                "專案 / 類別 (Project/Category)": item.category,
-                "工作項目 / 內容描述 (Task Description)": item.task,
-                "負責人 (Assignee)": item.assignee,
-                "建立日期 (Start Date)": item.startDate,
-                "到期日 (Due Date)": item.dueDate,
-                "備註 / 後續追蹤 (Remarks/Notes)": item.remarks
+                "結案": item.closed,
+                "優先權": item.priority,
+                "類別": item.category,
+                "工作項目": item.task,
+                "負責人": item.assignee,
+                "建立日期": item.startDate,
+                "到期日": item.dueDate,
+                "備註": item.remarks
             }));
 
             const worksheet = XLSX.utils.json_to_sheet(exportData);
@@ -925,7 +945,7 @@
                     if (json.length > 0) {
                         currentSheetName = sheetName;
                         dbWorksheets[currentSheetName] = json.map(row => {
-                            let cVal = row["結案 (Y/N)"] || row["結案"] || "O";
+                            let cVal = row["結案"] || row["結案 (Y/N)"] || "O";
                             let sVal = "🟢 已完成";
                             if(cVal === '△') sVal = "🟡 進行中";
                             else if(cVal === 'X') sVal = "🔴 待處理";
@@ -933,13 +953,13 @@
                             return {
                                 status: sVal,
                                 closed: cVal,
-                                priority: row["優先權 (Priority)"] || "⚡ 普通",
-                                category: row["專案 / 類別 (Project/Category)"] || row["專案 / 類別"] || "",
-                                task: row["工作項目 / 內容描述 (Task Description)"] || row["工作項目 / 內容描述"] || "",
-                                assignee: row["負責人 (Assignee)"] || row["負責人"] || "本人",
-                                startDate: row["建立日期 (Start Date)"] || row["建立日期"] || "",
-                                dueDate: row["到期日 (Due Date)"] || row["到期日"] || "",
-                                remarks: row["備註 / 後續追蹤 (Remarks/Notes)"] || row["備註 / 後續追蹤"] || ""
+                                priority: row["優先權"] || row["優先權 (Priority)"] || "⚡ 普通",
+                                category: row["類別"] || row["專案 / 類別 (Project/Category)"] || "改善",
+                                task: row["工作項目"] || row["工作項目 / 內容描述 (Task Description)"] || "",
+                                assignee: row["負責人"] || row["負責人 (Assignee)"] || "本人",
+                                startDate: row["建立日期"] || row["建立日期 (Start Date)"] || "",
+                                dueDate: row["到期日"] || row["到期日 (Due Date)"] || "",
+                                remarks: row["備註"] || row["備註 / 後續追蹤 (Remarks/Notes)"] || ""
                             };
                         });
                         renderWorksheetTabs();
