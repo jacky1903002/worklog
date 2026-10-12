@@ -124,7 +124,7 @@
         <!-- 主要內容區 -->
         <main class="flex-1 p-6 max-w-7xl mx-auto w-full">
             
-            <!-- 區塊一：工作日誌表格 (含狀態燈號與到期日顏色警示) -->
+            <!-- 區塊一：工作日誌表格 -->
             <div id="section-table" class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
                 <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
                     <h3 id="current-sheet-title" class="font-bold text-gray-800 text-base">目前工作表: 載入中...</h3>
@@ -156,7 +156,7 @@
                     </table>
                 </div>
                 <div class="p-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center text-xs text-gray-500">
-                    <span>提示：所有欄位與名稱皆已依照範本鎖定。到期日會自動根據當前日期進行超期/將到期天數計算並顯示顏色警示。</span>
+                    <span>提示：所有欄位與名稱皆已依照範本鎖定。到期日會自動根據當前日期計算超期天數並顯示顏色警示。</span>
                     <button onclick="addNewRow()" class="text-blue-600 hover:text-blue-800 font-medium flex items-center">
                         <i class="fa-solid fa-plus mr-1"></i>新增一列
                     </button>
@@ -165,7 +165,6 @@
 
             <!-- 區塊二：工作日誌分析與圖表 -->
             <div id="section-analysis" class="hidden space-y-6">
-                <!-- 統計摘要卡片 -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div class="bg-white p-5 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between">
                         <div>
@@ -205,9 +204,7 @@
                     </div>
                 </div>
 
-                <!-- 圖表區域 -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- 狀態分布圖 -->
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col justify-between">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="font-bold text-gray-800 text-base">工作狀態分布</h3>
@@ -220,7 +217,6 @@
                         </div>
                     </div>
 
-                    <!-- 專案/類別分布圖 -->
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex flex-col justify-between">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="font-bold text-gray-800 text-base">專案 / 類別分佈</h3>
@@ -258,13 +254,11 @@
         const auth = getAuth(app);
         const database = getDatabase(app);
 
-        // 全域資料結構：以工作表名稱為 Key
         let dbWorksheets = {};
         let currentSheetName = "";
         let statusChartInstance = null;
         let projectChartInstance = null;
 
-        // 預設預設資料
         const defaultWorksheets = {
             "2026年10月上旬日誌": [
                 {
@@ -300,7 +294,12 @@
             ]
         };
 
-        // 連線狀態監控
+        // 清洗工作表名稱，避免包含 Firebase 不合法的字元 (., #, $, /, [, ])
+        function sanitizeSheetName(name) {
+            if (!name) return "未命名工作表";
+            return name.toString().replace(/[.#$*\/[\]]/g, "_").trim();
+        }
+
         const connectedRef = ref(database, ".info/connected");
         onValue(connectedRef, (snap) => {
             const dot = document.getElementById("conn-dot");
@@ -314,7 +313,6 @@
             }
         });
 
-        // 驗證登入狀態
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 document.getElementById("login-screen").classList.add("hidden");
@@ -346,7 +344,6 @@
             signOut(auth);
         });
 
-        // 從 Firebase 載入多工作表資料
         window.loadDataFromFirebase = function() {
             const dbRef = ref(database, "worklogs_multisheet");
             onValue(dbRef, (snapshot) => {
@@ -367,7 +364,6 @@
             }, { onlyOnce: true });
         };
 
-        // 儲存至 Firebase
         window.saveToFirebase = function(isSilent = false) {
             collectTableData();
             const dbRef = ref(database, "worklogs_multisheet");
@@ -392,7 +388,6 @@
             document.getElementById("last-saved-time").textContent = timeStr;
         }
 
-        // 渲染工作表分頁標籤
         window.renderWorksheetTabs = function() {
             const container = document.getElementById("worksheet-tabs");
             container.innerHTML = "";
@@ -416,8 +411,10 @@
         };
 
         window.createNewSheet = function() {
-            const name = prompt("請輸入新工作表名稱 (例如：2026年10月中旬日誌):");
+            let name = prompt("請輸入新工作表名稱 (例如：2026年10月中旬日誌):");
             if (!name) return;
+            name = sanitizeSheetName(name);
+
             if (dbWorksheets[name]) {
                 alert("該工作表名稱已存在！");
                 return;
@@ -457,8 +454,6 @@
             }
         };
 
-        // 計算到期日顏色提示
-        // 規則：小於1天(黃色), 超過3天(橘色), 超過5天(紅色), 未結案且逾期計算
         function getDueDateBadge(dueDateStr, isClosed) {
             if (!dueDateStr) return `<span class="text-gray-500">-</span>`;
             if (isClosed === 'Y') return `<span class="text-gray-600">${dueDateStr} (已結案)</span>`;
@@ -494,14 +489,12 @@
             return `<span class="px-2 py-0.5 rounded text-xs ${badgeClass}">${dueDateStr}${indicator}</span>`;
         }
 
-        // 狀態燈號顏色轉換
         function getStatusColorClass(status) {
             if (status.includes("已完成")) return "bg-green-50 text-green-700 border-green-300 font-semibold";
             if (status.includes("進行中")) return "bg-amber-50 text-amber-700 border-amber-300 font-semibold";
             return "bg-red-50 text-red-700 border-red-300 font-semibold";
         }
 
-        // 轉譯表格畫面
         window.renderTable = function() {
             document.getElementById("current-sheet-title").textContent = `目前工作表: ${currentSheetName}`;
             const tbody = document.getElementById("table-body");
@@ -610,7 +603,6 @@
             }
         };
 
-        // 頁籤切換 (表單 vs 分析)
         window.switchView = function(viewName) {
             const tableSection = document.getElementById("section-table");
             const analysisSection = document.getElementById("section-analysis");
@@ -635,7 +627,6 @@
             }
         };
 
-        // Excel 匯出與匯入 (支援當前工作表)
         window.exportToExcel = function() {
             collectTableData();
             const workData = dbWorksheets[currentSheetName] || [];
@@ -665,11 +656,16 @@
                 try {
                     const data = new Uint8Array(e.target.result);
                     const workbook = XLSX.read(data, { type: 'array' });
-                    const firstSheetName = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    // 使用 Excel 的第一個工作表名稱（並經過安全清洗，過濾掉 . # $ / [ ] 等字元）
+                    const rawSheetName = workbook.SheetNames[0];
+                    const sheetName = sanitizeSheetName(rawSheetName);
+                    
+                    const worksheet = workbook.Sheets[rawSheetName];
                     const json = XLSX.utils.sheet_to_json(worksheet);
 
                     if (json.length > 0) {
+                        currentSheetName = sheetName;
                         dbWorksheets[currentSheetName] = json.map(row => ({
                             status: row["狀態 (Status)"] || "🟡 進行中",
                             closed: row["結案 (Y/N)"] || "N",
@@ -680,9 +676,10 @@
                             dueDate: row["到期日 (Due Date)"] || "",
                             remarks: row["備註 / 後續追蹤 (Remarks/Notes)"] || ""
                         }));
+                        renderWorksheetTabs();
                         renderTable();
                         saveToFirebase(true);
-                        alert(`Excel 成功匯入至工作表「${currentSheetName}」並同步至雲端！`);
+                        alert(`Excel 成功匯入並建立工作表「${currentSheetName}」同步至雲端！`);
                     }
                 } catch (err) {
                     alert("匯入失敗，請確認檔案格式是否與範本相符：" + err.message);
@@ -692,7 +689,6 @@
             reader.readAsArrayBuffer(file);
         };
 
-        // 更新分析圖表與數據
         function updateAnalysisCharts() {
             const workData = dbWorksheets[currentSheetName] || [];
             const total = workData.length;
