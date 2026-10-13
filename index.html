@@ -120,7 +120,18 @@
                 </div>
             </div>
 
+            <!-- 多選跨表複製區塊 (結合下拉選單) -->
             <div class="flex flex-wrap items-center gap-2.5">
+                <div class="flex items-center space-x-1 bg-indigo-50 border-2 border-indigo-200 px-2.5 py-1.5 rounded-xl shadow-inner">
+                    <i class="fa-solid fa-clone text-indigo-700 text-xs"></i>
+                    <select id="target-sheet-select" class="bg-white border border-indigo-300 text-indigo-900 text-xs font-extrabold rounded-lg px-2 py-1 focus:ring-2 focus:ring-indigo-600 focus:outline-none">
+                        <!-- 動態載入目標工作表選項 -->
+                    </select>
+                    <button onclick="batchCopyToSelectedSheet()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-lg text-xs font-extrabold transition shadow-md shadow-indigo-600/30 flex items-center">
+                        <span>複製至選定表</span>
+                    </button>
+                </div>
+                
                 <button onclick="addNewRow()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-xl text-xs font-extrabold transition shadow-md shadow-emerald-600/30 flex items-center">
                     <i class="fa-solid fa-plus mr-1.5"></i><span data-i18n="addRow">新增列位</span>
                 </button>
@@ -153,6 +164,9 @@
                     <table class="w-full text-center border-collapse" id="work-table">
                         <thead>
                             <tr class="bg-slate-200 text-slate-900 text-xs border-b-2 border-slate-300 font-extrabold align-middle">
+                                <th class="py-3 px-3 text-center w-10 whitespace-nowrap">
+                                    <input type="checkbox" id="select-all-checkbox" onclick="toggleSelectAllRows(this)" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 w-4 h-4 cursor-pointer" title="全選/取消全選">
+                                </th>
                                 <th class="py-3 px-3 text-center w-12 whitespace-nowrap" data-i18n="thIndex">項次</th>
                                 <th class="py-3 px-3 w-32 text-center whitespace-nowrap" data-i18n="thStatus">狀態</th>
                                 <th class="py-3 px-2 text-center w-20 whitespace-nowrap" data-i18n="thClosed">結案</th>
@@ -495,8 +509,8 @@
                     currentSheetName = sheetNames[0];
                 }
                 renderWorksheetTabs();
+                updateTargetSheetSelect();
                 renderTable();
-                updateLastSavedTime(new Date());
             }, { onlyOnce: true });
         };
 
@@ -526,22 +540,10 @@
 
             dbWorksheets = cleanWorksheets;
             const dbRef = ref(database, "worklogs_multisheet");
-            set(dbRef, dbWorksheets).then(() => {
-                updateLastSavedTime(new Date());
-            }).catch((error) => {
+            set(dbRef, dbWorksheets).catch((error) => {
                 console.error("自動儲存失敗: " + error.message);
             });
         };
-
-        function updateLastSavedTime(dateObj) {
-            const timeStr = dateObj.getFullYear() + '-' + 
-                String(dateObj.getMonth() + 1).padStart(2, '0') + '-' + 
-                String(dateObj.getDate()).padStart(2, '0') + ' ' + 
-                String(dateObj.getHours()).padStart(2, '0') + ':' + 
-                String(dateObj.getMinutes()).padStart(2, '0') + ':' + 
-                String(dateObj.getSeconds()).padStart(2, '0');
-            document.getElementById("last-saved-time").textContent = timeStr;
-        }
 
         window.changeSystemLogo = function() {
             let url = prompt("請輸入自訂的系統圖標圖片網址 (URL):", localStorage.getItem("custom_sys_logo") || "");
@@ -565,6 +567,30 @@
                 document.getElementById("sys-logo-img").src = url;
                 document.getElementById("sys-logo-img").classList.remove("hidden");
                 document.getElementById("sys-logo-icon").classList.add("hidden");
+            }
+        }
+
+        // 更新跨表複製的目標下拉式選單內容
+        function updateTargetSheetSelect() {
+            const selectEl = document.getElementById("target-sheet-select");
+            if (!selectEl) return;
+            selectEl.innerHTML = "";
+            
+            const sheetNames = Object.keys(dbWorksheets).filter(s => s !== currentSheetName);
+            if (sheetNames.length === 0) {
+                const opt = document.createElement("option");
+                opt.value = "";
+                opt.textContent = "無其他工作表";
+                selectEl.appendChild(opt);
+                selectEl.disabled = true;
+            } else {
+                selectEl.disabled = false;
+                sheetNames.forEach(sheetName => {
+                    const opt = document.createElement("option");
+                    opt.value = sheetName;
+                    opt.textContent = sheetName;
+                    selectEl.appendChild(opt);
+                });
             }
         }
 
@@ -595,6 +621,7 @@
                 };
                 container.appendChild(btn);
             });
+            updateTargetSheetSelect();
         };
 
         window.moveSheet = function(index, direction) {
@@ -762,10 +789,20 @@
             saveToFirebase(true);
         };
 
+        window.toggleSelectAllRows = function(masterCheckbox) {
+            const checkboxes = document.querySelectorAll(".row-checkbox");
+            checkboxes.forEach(cb => {
+                cb.checked = masterCheckbox.checked;
+            });
+        };
+
         window.renderTable = function() {
             document.getElementById("current-sheet-title").innerHTML = `<i class="fa-solid fa-pen-to-square text-blue-600 mr-2"></i><span class="text-blue-700 underline mx-1">${currentSheetName}</span> <span class="text-xs text-slate-500 font-bold ml-2">(💡 雙擊此標題可自由編輯名稱)</span>`;
             const tbody = document.getElementById("table-body");
             tbody.innerHTML = "";
+
+            const masterCheckbox = document.getElementById("select-all-checkbox");
+            if (masterCheckbox) masterCheckbox.checked = false;
 
             const rawData = dbWorksheets[currentSheetName] || [];
 
@@ -792,6 +829,9 @@
                 let assigneeOptionsHtml = assigneeOptions.map(opt => `<option value="${opt}" ${row.assignee === opt ? 'selected' : ''}>${opt}</option>`).join('');
 
                 tr.innerHTML = `
+                    <td class="py-3 px-3 text-center align-middle">
+                        <input type="checkbox" data-index="${index}" class="row-checkbox rounded border-slate-300 text-blue-600 focus:ring-blue-500 w-4 h-4 cursor-pointer">
+                    </td>
                     <td class="py-3 px-3 text-center font-extrabold text-slate-500 align-middle">${index + 1}</td>
                     <td class="py-3 px-3 align-middle">
                         <div data-field="status" class="w-full border-2 rounded-xl px-2.5 py-2 text-xs text-center shadow-sm h-10 flex items-center justify-center ${statusClass}">
@@ -846,7 +886,7 @@
                     </td>
                 `;
                 
-                tr.querySelectorAll("select, input").forEach(el => {
+                tr.querySelectorAll("select, input[type='text'], input[type='date']").forEach(el => {
                     el.addEventListener("input", () => {
                         updateRowData(index, el.getAttribute("data-field"), el.value);
                     });
@@ -952,6 +992,37 @@
             dbWorksheets[targetSheet].push(JSON.parse(JSON.stringify(target)));
             saveToFirebase(true);
             alert(`已成功將此項次複製至「${targetSheet}」！`);
+        };
+
+        // 依據工具列選單選擇的目標工作表，批次複製已勾選項次
+        window.batchCopyToSelectedSheet = function() {
+            collectTableData();
+            const checkedBoxes = document.querySelectorAll(".row-checkbox:checked");
+            if (checkedBoxes.length === 0) {
+                alert("請至少勾選一筆要跨表複製的工作項目！");
+                return;
+            }
+
+            const selectEl = document.getElementById("target-sheet-select");
+            const targetSheet = selectEl.value;
+            if (!targetSheet || !dbWorksheets[targetSheet]) {
+                alert("請選擇有效的目標工作表！");
+                return;
+            }
+
+            let count = 0;
+            checkedBoxes.forEach(cb => {
+                const idx = parseInt(cb.getAttribute("data-index"));
+                const targetRow = dbWorksheets[currentSheetName][idx];
+                if (targetRow) {
+                    dbWorksheets[targetSheet].push(JSON.parse(JSON.stringify(targetRow)));
+                    count++;
+                }
+            });
+
+            saveToFirebase(true);
+            alert(`已成功將選取的 ${count} 筆項目批量複製至「${targetSheet}」！`);
+            renderTable();
         };
 
         window.deleteRow = function(index) {
