@@ -505,9 +505,12 @@
                     saveToFirebase(true);
                 }
                 const sheetNames = Object.keys(dbWorksheets);
-                if (!currentSheetName || !dbWorksheets[currentSheetName]) {
-                    currentSheetName = sheetNames[0];
+                
+                // 💡 自動跳到最右邊（最後一個）工作表
+                if (sheetNames.length > 0) {
+                    currentSheetName = sheetNames[sheetNames.length - 1];
                 }
+
                 renderWorksheetTabs();
                 updateTargetSheetSelect();
                 renderTable();
@@ -570,7 +573,6 @@
             }
         }
 
-        // 更新跨表複製的目標下拉式選單內容
         function updateTargetSheetSelect() {
             const selectEl = document.getElementById("target-sheet-select");
             if (!selectEl) return;
@@ -679,8 +681,8 @@
             collectTableData();
             const today = new Date().toISOString().split('T')[0];
             dbWorksheets[name] = [{
-                closed: "△",
                 status: "🟡 進行中",
+                closed: "△",
                 priority: "⚡ 普通",
                 category: "改善",
                 task: "請輸入工作項目描述",
@@ -994,7 +996,6 @@
             alert(`已成功將此項次複製至「${targetSheet}」！`);
         };
 
-        // 依據工具列選單選擇的目標工作表，批次複製已勾選項次
         window.batchCopyToSelectedSheet = function() {
             collectTableData();
             const checkedBoxes = document.querySelectorAll(".row-checkbox:checked");
